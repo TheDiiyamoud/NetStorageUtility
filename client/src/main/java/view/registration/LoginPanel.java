@@ -54,4 +54,8 @@ public class LoginPanel extends JPanel {
         }
         return instance;
     }
+
+    public void resetText() {
+        errorDisplayLabel.setText("");
+    }
 }

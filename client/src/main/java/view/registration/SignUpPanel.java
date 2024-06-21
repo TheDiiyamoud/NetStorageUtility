@@ -68,4 +68,8 @@ public class SignUpPanel extends JPanel {
         return instance;
     }
 
+    public void resetText() {
+        signupFailureDisplay.setText("");
+    }
+
 }
