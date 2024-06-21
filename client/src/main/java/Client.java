@@ -1,5 +1,9 @@
+import view.MainFrame;
+
+import javax.swing.*;
+
 public class Client {
     public static void main(String[] args) {
-        System.out.println("This is the client running");
+        SwingUtilities.invokeLater(MainFrame::getInstance);
     }
 }
