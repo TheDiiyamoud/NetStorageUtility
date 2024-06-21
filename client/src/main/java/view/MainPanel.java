@@ -1,5 +1,7 @@
 package view;
 
+import view.registration.RegistryPanel;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,6 +11,7 @@ public class MainPanel extends JPanel {
 
     private MainPanel() {
         setPreferredSize(new Dimension(640,480));
+        setLayout(new BorderLayout());
     }
 
     public static MainPanel getInstance() {
@@ -16,6 +19,12 @@ public class MainPanel extends JPanel {
             instance = new MainPanel();
         }
         return instance;
+    }
+
+    public void clearPanel() {
+        removeAll();
+        revalidate();
+        repaint();
     }
 
 }
