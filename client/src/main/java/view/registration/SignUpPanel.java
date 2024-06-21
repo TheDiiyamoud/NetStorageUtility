@@ -11,6 +11,7 @@ public class SignUpPanel extends JPanel {
     private JPasswordField passwordField, passwordConfirmField;
     private JButton proceedButton;
     private JLabel signupFailureDisplay;
+    private JButton previousMenu;
 
 
     private SignUpPanel() {
@@ -23,33 +24,52 @@ public class SignUpPanel extends JPanel {
         passwordConfirmField = new JPasswordField("", 20);
         passwordConfirmField.setBorder(new TitledBorder("Confirm Password"));
         proceedButton = new JButton("Enter");
+        previousMenu = new JButton("Back");
         signupFailureDisplay = new JLabel("");//TODO: Manage the error being displayed
         signupFailureDisplay.setForeground(Color.red);
+
+
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 2;
         add(usernameField, gridBagConstraints);
+
+
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 2;
         add(passwordField, gridBagConstraints);
+
+
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 2;
         add(passwordConfirmField, gridBagConstraints);
+
+
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
         add(proceedButton, gridBagConstraints);
+
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        add(previousMenu, gridBagConstraints);
+
+
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 4;
         add(signupFailureDisplay, gridBagConstraints);
+
+
         buttonActionListener();
 
     }
@@ -57,6 +77,9 @@ public class SignUpPanel extends JPanel {
 
     private void buttonActionListener() {
         proceedButton.addActionListener((ActionEvent e)-> {
+            //TODO: Do what you gotta do
+        });
+        previousMenu.addActionListener((ActionEvent e) -> {
             //TODO: Do what you gotta do
         });
     }
