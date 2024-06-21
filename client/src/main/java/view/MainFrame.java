@@ -6,10 +6,12 @@ public class MainFrame extends JFrame {
     private static MainFrame mainFrameInstance;
 
     private MainFrame() {
-        setTitle("Generic Title");
+        setTitle("File Hosting Client");
         setLocationRelativeTo(null);
-        setSize(640,480);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
+        add(MainPanel.getInstance());
+        pack();
         setVisible(true);
 
     }

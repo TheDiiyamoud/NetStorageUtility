@@ -1,6 +1,7 @@
 package view;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class LoginPanel extends JPanel {
     private static LoginPanel instance;
@@ -10,6 +11,7 @@ public class LoginPanel extends JPanel {
     private JLabel errorDisplayLabel;
 
     private LoginPanel() {
+        this.setLayout(new GridLayout());
         this.usernameField = new JTextField();
         this.passwordField = new JPasswordField();
         this.proceedButton = new JButton("Enter");
