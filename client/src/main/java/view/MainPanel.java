@@ -1,6 +1,5 @@
 package view;
 
-import view.registration.RegistryPanel;
 
 import javax.swing.*;
 import java.awt.*;
