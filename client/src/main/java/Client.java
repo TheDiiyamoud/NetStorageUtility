@@ -7,11 +7,13 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class Client {
     public static void main(String[] args) {
         try {
-            File file = new File("/home/dii/Desktop/Origin/filet.zip");
+            File file = new File("/home/dii/Desktop/Origin/bible.pdf");
             byte[] buffer = new byte[1024];
             FileInputStream fileInputStream = new FileInputStream(file);
             DatagramSocket datagramSocket= new DatagramSocket();
@@ -22,6 +24,9 @@ public class Client {
                 DatagramPacket datagramPacket = new DatagramPacket(buffer, bytesRead, ip, 3000);
                 datagramSocket.send(datagramPacket);
             }
+            String eof = "END_OF_FILE";
+
+            datagramSocket.send(new DatagramPacket(eof.getBytes(), eof.length(), ip, 3000));
             datagramSocket.close();
             fileInputStream.close();
 

@@ -12,11 +12,14 @@ public class Server {
         try {
             datagramSocket = new DatagramSocket(3000);
             byte[] buffer = new byte[1024];
-            File file = new File("/home/dii/Desktop/Destination/filet.zip");
+            File file = new File("/home/dii/Desktop/Destination/bible.pdf");
             fileOutputStream = new FileOutputStream(file);
             while (true) {
                 DatagramPacket datagramPacket = new DatagramPacket(buffer, 1024);
                 datagramSocket.receive(datagramPacket);
+                if (checkForEOF(datagramPacket)) {
+                    break;
+                }
                 fileOutputStream.write(datagramPacket.getData(), 0, datagramPacket.getLength());
             }
 
@@ -35,6 +38,16 @@ public class Server {
                 datagramSocket.close();
             }
         }
+    }
+
+    private static boolean checkForEOF(DatagramPacket dp) {
+        String s = new String(dp.getData(), 0, dp.getLength());
+        if (s.equals("END_OF_FILE")) {
+            System.out.println("TRUEEEE");
+            return true;
+        }
+        return false;
+//        return s.equals("END_OF_FILE");
     }
 }
 
