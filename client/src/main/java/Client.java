@@ -14,10 +14,12 @@ public class Client {
             DatagramSocket datagramSocket= new DatagramSocket();
             InetAddress ip = InetAddress.getByName("127.0.0.1");
             int bytesRead;
+            int sequenceNumber = 0;
             // bytesRead is the count of the bytes existing in the array, -1 otherwise
             while ((bytesRead = fileInputStream.read(buffer)) != -1) {
-                DatagramPacket datagramPacket = new DatagramPacket(buffer, bytesRead, ip, 3000);
+                DatagramPacket datagramPacket = UDPacketCreator.getInstance().getSequencedPacket(buffer, bytesRead, sequenceNumber,ip, 3000);
                 datagramSocket.send(datagramPacket);
+                sequenceNumber++;
             }
             String eof = "END_OF_FILE";
 

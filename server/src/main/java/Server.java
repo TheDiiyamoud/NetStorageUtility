@@ -17,10 +17,11 @@ public class Server {
             while (true) {
                 DatagramPacket datagramPacket = new DatagramPacket(buffer, 1024);
                 datagramSocket.receive(datagramPacket);
+                System.out.println(getPacketNumber(datagramPacket.getData()));
                 if (checkForEOF(datagramPacket)) {
                     break;
                 }
-                fileOutputStream.write(datagramPacket.getData(), 0, datagramPacket.getLength());
+
             }
 
 
@@ -38,6 +39,10 @@ public class Server {
                 datagramSocket.close();
             }
         }
+    }
+
+    private static int getPacketNumber(byte[] sequencedPacket) {
+        return (sequencedPacket[0]<<24) + (sequencedPacket[1] << 16) + (sequencedPacket[2] << 8) + sequencedPacket[3];
     }
 
     private static boolean checkForEOF(DatagramPacket dp) {
