@@ -1,14 +1,9 @@
-import view.MainFrame;
-
-import javax.swing.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 public class Client {
     public static void main(String[] args) {
