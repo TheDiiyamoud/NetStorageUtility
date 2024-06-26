@@ -4,6 +4,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 
 public class Server {
@@ -15,27 +17,36 @@ public class Server {
         try {
             datagramSocket = new DatagramSocket(3000);
             byte[] buffer = new byte[1044];
-            File file = new File("/home/dii/Desktop/Destination/filet.zip");
+            byte[] fileName = new byte[65000];
+            byte[] bufferToWrite = new byte[1024];
+            DatagramPacket fileNamePacket = new DatagramPacket(fileName, fileName.length);
+            datagramSocket.receive(fileNamePacket);
+            String fileNameString = new String(fileNamePacket.getData(), 0, fileNamePacket.getLength());
+            System.out.println("the file name is " + fileNameString);
+            File file = new File("/home/dii/Desktop/Destination/" + fileNameString);
+            InetAddress ip = InetAddress.getByName("127.0.0.1");
             fileOutputStream = new FileOutputStream(file);
+            int sequence = 0;
             while (true) {
+                datagramSocket.send(new DatagramPacket(ByteBuffer.allocate(4).putInt(sequence).array(), 4, ip, 3500));
                 DatagramPacket datagramPacket = new DatagramPacket(buffer, 1044);
                 datagramSocket.receive(datagramPacket);
-                System.out.println(getPacketNumber(datagramPacket.getData()));
-                System.out.println(datagramPacket.getData().length);
-                boolean isReceivedCompletly = byteChecksum.verifyPacketIntegrity(datagramPacket);
+                boolean isReceivedCompletely = byteChecksum.verifyPacketIntegrity(datagramPacket);
+                boolean hasCorrectOrder = getPacketNumber(datagramPacket.getData()) == sequence;
                 if (checkForEOF(datagramPacket)) {
                     break;
                 }
-                if (isReceivedCompletly) {
-                    System.out.println("YES");
+                if (isReceivedCompletely && hasCorrectOrder) {
+                    bufferToWrite = stripData(datagramPacket);
+                    fileOutputStream.write(bufferToWrite);
                 }
                 else {
-                    System.out.println("NO");
+                    continue;
                 }
 
-
+                sequence++;
             }
-
+            System.out.println("Total of " + sequence + " packets received");
 
         } catch (IOException e) {
             e.printStackTrace();
