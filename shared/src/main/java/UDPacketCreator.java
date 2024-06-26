@@ -3,7 +3,7 @@ import java.net.InetAddress;
 
 public class UDPacketCreator {
     private static UDPacketCreator instance;
-
+    private ByteChecksum byteChecksum = new ByteChecksum();
     private UDPacketCreator() {
 
     }
@@ -32,6 +32,7 @@ public class UDPacketCreator {
         newBuffer[1] = (byte) (sequenceNumber >> 16);
         newBuffer[2] = (byte) (sequenceNumber >> 8);
         newBuffer[3] = (byte) (sequenceNumber);
-        return new DatagramPacket(newBuffer, newBuffer.length, ipAddress, port);
+        byte[] hashIncludedBuffer = byteChecksum.getHashIncludedDataArray(newBuffer);
+        return new DatagramPacket(hashIncludedBuffer, hashIncludedBuffer.length, ipAddress, port);
     }
 }
