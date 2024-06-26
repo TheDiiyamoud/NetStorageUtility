@@ -15,14 +15,20 @@ public class Server {
         try {
             datagramSocket = new DatagramSocket(3000);
             byte[] buffer = new byte[1044];
-            File file = new File("/home/dii/Desktop/Destination/bible.pdf");
+            File file = new File("/home/dii/Desktop/Destination/filet.zip");
             fileOutputStream = new FileOutputStream(file);
             while (true) {
                 DatagramPacket datagramPacket = new DatagramPacket(buffer, 1044);
                 datagramSocket.receive(datagramPacket);
                 System.out.println(getPacketNumber(datagramPacket.getData()));
                 System.out.println(datagramPacket.getData().length);
-                verifyPacketIntegrity(datagramPacket.getData());
+                boolean isReceivedCompletly = byteChecksum.verifyPacketIntegrity(datagramPacket);
+                if (isReceivedCompletly) {
+                    System.out.println("YES");
+                }
+                else {
+                    System.out.println("NO");
+                }
                 if (checkForEOF(datagramPacket)) {
                     break;
                 }
@@ -47,18 +53,10 @@ public class Server {
     }
 
     private static int getPacketNumber(byte[] sequencedPacket) {
-        return (sequencedPacket[0]<<24) + (sequencedPacket[1] << 16) + (sequencedPacket[2] << 8) + sequencedPacket[3];
+        return ((sequencedPacket[0] & 0xFF)<<24) + ((sequencedPacket[1] & 0xFF)<< 16) + ((sequencedPacket[2] & 0xFF)<< 8) + (sequencedPacket[3]& 0xFF);
     }
 
-    private static void verifyPacketIntegrity(byte[] data) {
-        byte[] hash = new byte[16];
-        byte[] actualData = new byte[1028];
-        System.arraycopy(data, 0, actualData, 0, actualData.length);
-        System.arraycopy(data, actualData.length, hash, 0, hash.length);
-        byte[] calculatedHash = byteChecksum.getMD5Hash(actualData);
-        System.out.println(MessageDigest.isEqual(hash, calculatedHash));
 
-    }
     private static boolean checkForEOF(DatagramPacket dp) {
         String s = new String(dp.getData(), 0, dp.getLength());
         if (s.equals("END_OF_FILE")) {

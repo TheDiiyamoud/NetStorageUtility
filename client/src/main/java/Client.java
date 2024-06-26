@@ -8,7 +8,7 @@ import java.net.InetAddress;
 public class Client {
     public static void main(String[] args) {
         try {
-            File file = new File("/home/dii/Desktop/Origin/bible.pdf");
+            File file = new File("/home/dii/Desktop/Origin/filet.zip");
             byte[] buffer = new byte[1024];
             FileInputStream fileInputStream = new FileInputStream(file);
             DatagramSocket datagramSocket= new DatagramSocket();
