@@ -23,15 +23,16 @@ public class Server {
                 System.out.println(getPacketNumber(datagramPacket.getData()));
                 System.out.println(datagramPacket.getData().length);
                 boolean isReceivedCompletly = byteChecksum.verifyPacketIntegrity(datagramPacket);
+                if (checkForEOF(datagramPacket)) {
+                    break;
+                }
                 if (isReceivedCompletly) {
                     System.out.println("YES");
                 }
                 else {
                     System.out.println("NO");
                 }
-                if (checkForEOF(datagramPacket)) {
-                    break;
-                }
+
 
             }
 
@@ -65,6 +66,14 @@ public class Server {
         }
         return false;
 //        return s.equals("END_OF_FILE");
+    }
+
+
+    private static byte[] stripData(DatagramPacket packet) {
+        byte[] data = packet.getData();
+        byte[] usefulDate = new byte[1024];
+        System.arraycopy(data, 4, usefulDate, 0, usefulDate.length);
+        return usefulDate;
     }
 }
 
