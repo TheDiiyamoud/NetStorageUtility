@@ -3,19 +3,10 @@ import java.security.NoSuchAlgorithmException;
 
 public class ByteChecksum {
 
-    private String hashingAlgorithm = "MD5";
-
-    public ByteChecksum() {
-
-    }
-
-    public ByteChecksum(String hashingAlgorithm) {
-        this.hashingAlgorithm = hashingAlgorithm;
-    }
 
     public byte[] getMD5Hash(byte[] data) {
         try {
-            MessageDigest md = MessageDigest.getInstance(hashingAlgorithm);
+            MessageDigest md = MessageDigest.getInstance("MD5");
             return md.digest(data);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
