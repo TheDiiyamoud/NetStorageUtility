@@ -8,7 +8,8 @@ public class Client {
                     3500,
                     3000,
                     "127.0.0.1");
-            fileSender.sendFile();
+            Thread thread = new Thread(fileSender);
+            thread.start();
         } catch (IOException e) {
             e.printStackTrace();
         }

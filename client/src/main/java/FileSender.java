@@ -6,7 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
 
-public class FileSender {
+public class FileSender implements Runnable{
 
     private final byte[] buffer;
     private final byte[] packetNumberForVerification;
@@ -29,7 +29,8 @@ public class FileSender {
         fileName = file.getName().getBytes();
     }
 
-    public void sendFile() {
+    @Override
+    public void run() {
         int sequenceNumber = 0;
         try {
 

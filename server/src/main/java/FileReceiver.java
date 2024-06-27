@@ -7,7 +7,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 
-public class FileReceiver {
+public class FileReceiver implements Runnable{
 
     private final ByteChecksum byteChecksum = new ByteChecksum();
     private FileOutputStream fileOutputStream = null;
@@ -22,7 +22,8 @@ public class FileReceiver {
         ip = InetAddress.getByName(clientAddress);
     }
 
-    public void receiveFile() {
+    @Override
+    public void run() {
         try {
             datagramSocket = new DatagramSocket(serverPort);
             byte[] buffer = new byte[1044];
