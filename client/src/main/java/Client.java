@@ -6,7 +6,7 @@ import java.io.IOException;
 public class Client {
     public static void main(String[] args) {
 //        try {
-//            FileSender fileSender = new FileSender(
+//            backend.FileSender fileSender = new backend.FileSender(
 //                    "/home/dii/Desktop/Origin/filet.zip",
 //                    3500,
 //                    3000,
