@@ -1,10 +1,7 @@
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 public class Client {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
+
+
 //        try {
 //            backend.FileSender fileSender = new backend.FileSender(
 //                    "/home/dii/Desktop/Origin/filet.zip",
