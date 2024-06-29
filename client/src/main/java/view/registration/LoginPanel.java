@@ -1,5 +1,7 @@
 package view.registration;
 
+import view.MainPanel;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -67,8 +69,9 @@ public class LoginPanel extends JPanel {
         proceedButton.addActionListener((ActionEvent e) -> {
             //TODO: Do what you gotta do
         });
-        proceedButton.addActionListener((ActionEvent e) -> {
-            //TODO: Do what you gotta do
+        previousMenuButton.addActionListener((ActionEvent e) -> {
+            this.resetPanel();
+            MainPanel.getInstance().addComponent(RegistryPanel.getInstance());
         });
     }
     public static LoginPanel getInstance() {
@@ -78,7 +81,9 @@ public class LoginPanel extends JPanel {
         return instance;
     }
 
-    public void resetText() {
+    public void resetPanel() {
         errorDisplayLabel.setText("");
+        usernameField.setText("");
+        passwordField.setText("");
     }
 }

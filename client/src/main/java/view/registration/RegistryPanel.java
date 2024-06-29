@@ -17,7 +17,7 @@ public class RegistryPanel extends JPanel {
         gridBagConstraints.gridwidth = 2;
         add(signupButton, gridBagConstraints);
         signupButton.addActionListener((ActionEvent e) -> {
-            //TODO: Request the controller to spawn the sign-up panel
+            MainPanel.getInstance().addComponent(SignUpPanel.getInstance());
         });
         loginButton = new JButton("Log-in");
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
@@ -26,7 +26,7 @@ public class RegistryPanel extends JPanel {
         gridBagConstraints.gridy = 1;
         add(loginButton, gridBagConstraints);
         loginButton.addActionListener((ActionEvent e) -> {
-            //TODO: Request the controller to spawn the log-in panel
+            MainPanel.getInstance().addComponent(LoginPanel.getInstance());
         });
     }
 

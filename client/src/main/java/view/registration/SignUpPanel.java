@@ -1,5 +1,7 @@
 package view.registration;
 
+import view.MainPanel;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -80,7 +82,8 @@ public class SignUpPanel extends JPanel {
             //TODO: Do what you gotta do
         });
         previousMenu.addActionListener((ActionEvent e) -> {
-            //TODO: Do what you gotta do
+            this.resetPanel();
+            MainPanel.getInstance().addComponent(RegistryPanel.getInstance());
         });
     }
 
@@ -91,8 +94,11 @@ public class SignUpPanel extends JPanel {
         return instance;
     }
 
-    public void resetText() {
+    public void resetPanel() {
         signupFailureDisplay.setText("");
+        usernameField.setText("");
+        passwordField.setText("");
+        passwordConfirmField.setText("");
     }
 
 }
