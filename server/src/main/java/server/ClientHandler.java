@@ -3,8 +3,9 @@ package server;
 import model.User;
 import requests.FileUploadRequest;
 import requests.LoginRequest;
-import requests.ServerErrorDisplay;
+import responses.ServerErrorDisplay;
 import requests.SignUpRequest;
+import responses.SuccessfulLoginResponse;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -26,17 +27,29 @@ public class ClientHandler implements Runnable{
                 Object inputObject = inputStream.readObject();
 
                 if (inputObject instanceof SignUpRequest) {
+                    ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
                     SignUpRequest req = (SignUpRequest) inputObject;
                     if (UserAuthentication.getInstance().usernameExists(req.getUsername())) {
-                        ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
                         outputStream.writeObject(new ServerErrorDisplay("Username Exists"));
                         continue;
                     }
                     User user = new User(req.getUsername(), req.getPassword());
                     UserHandler.getInstance().createNewUser(user);
-
+                    outputStream.writeObject(new SuccessfulLoginResponse("Signed up successfully"));
+                    outputStream.close();
                 } else if (inputObject instanceof LoginRequest) {
-                    //todo: do what you gotta do
+                    ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+                    LoginRequest req = (LoginRequest) inputObject;
+                    if (UserAuthentication.getInstance().usernameExists(req.getUsername())) {
+                        if (UserAuthentication.getInstance().verifyLogin(req)) {
+                            outputStream.writeObject(new SuccessfulLoginResponse("Logged in successfully"));
+                        } else {
+                            outputStream.writeObject(new ServerErrorDisplay("Wrong password"));
+                        }
+                    } else {
+                        outputStream.writeObject(new ServerErrorDisplay("No such user exists"));
+                    }
+                    outputStream.close();
                 } else if (inputObject instanceof FileUploadRequest) {
                     //todo: do what you gotta do
                 } else if (true) {

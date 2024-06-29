@@ -1,6 +1,8 @@
-package requests;
+package responses;
 
-public class ServerErrorDisplay extends Request{
+import requests.Request;
+
+public class ServerErrorDisplay extends Request {
     private String message;
 
     public ServerErrorDisplay(String message) {
