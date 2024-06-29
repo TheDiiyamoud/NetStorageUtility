@@ -1,11 +1,13 @@
 package view.registration;
 
+import backend.controller.RequestFlowController;
 import view.MainPanel;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Arrays;
 
 public class LoginPanel extends JPanel {
     private static LoginPanel instance;
@@ -67,7 +69,16 @@ public class LoginPanel extends JPanel {
 
     void buttonActionListener() {
         proceedButton.addActionListener((ActionEvent e) -> {
-            //TODO: Do what you gotta do
+            if (!usernameField.getText().equals("")) {
+                if (passwordField.getPassword().length > 0) {
+                    this.resetPanel();
+                    RequestFlowController.getInstance().sendLoginRequest(usernameField.getText(), passwordField.getPassword());
+                } else {
+                    errorDisplayLabel.setText("PASSWORD FIELD SHALL NOT BE EMPTY");
+                }
+            } else {
+                errorDisplayLabel.setText("USERNAME FIELD SHALL NOT BE EMPTY!");
+            }
         });
         previousMenuButton.addActionListener((ActionEvent e) -> {
             this.resetPanel();
@@ -85,5 +96,9 @@ public class LoginPanel extends JPanel {
         errorDisplayLabel.setText("");
         usernameField.setText("");
         passwordField.setText("");
+    }
+
+    public void loginFailed() {
+        errorDisplayLabel.setText("Username or password is wrong!");
     }
 }

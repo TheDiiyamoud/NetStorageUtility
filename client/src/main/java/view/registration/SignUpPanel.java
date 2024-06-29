@@ -1,11 +1,13 @@
 package view.registration;
 
+import backend.controller.RequestFlowController;
 import view.MainPanel;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Arrays;
 
 public class SignUpPanel extends JPanel {
     private static SignUpPanel instance;
@@ -79,7 +81,16 @@ public class SignUpPanel extends JPanel {
 
     private void buttonActionListener() {
         proceedButton.addActionListener((ActionEvent e)-> {
-            //TODO: Do what you gotta do
+            if (!usernameField.getText().equals("")) {
+                if (Arrays.equals(passwordField.getPassword(), passwordConfirmField.getPassword()) && passwordField.getPassword().length > 0) {
+                    this.resetPanel();
+                    RequestFlowController.getInstance().sendSignupRequest(usernameField.getText(), passwordConfirmField.getPassword());
+                } else {
+                    signupFailureDisplay.setText("PASSWORDS ARE EITHER EMPTY OR DON'T MATCH");
+                }
+            } else {
+                signupFailureDisplay.setText("USERNAME FIELD SHALL NOT BE EMPTY!");
+            }
         });
         previousMenu.addActionListener((ActionEvent e) -> {
             this.resetPanel();
@@ -99,6 +110,10 @@ public class SignUpPanel extends JPanel {
         usernameField.setText("");
         passwordField.setText("");
         passwordConfirmField.setText("");
+    }
+
+    public void signupFailed() {
+        signupFailureDisplay.setText("Invalid signup, username already exists!");
     }
 
 }
