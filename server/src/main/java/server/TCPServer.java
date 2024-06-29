@@ -20,6 +20,7 @@ public class TCPServer {
     }
 
     public void start() throws IOException {
+        ServerLoadup.createDirectories();
         while (true) {
             Socket clientSocket = serverSocket.accept();
             System.out.println("Established a connection with " + clientSocket);
