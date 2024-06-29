@@ -1,7 +1,9 @@
 package server;
 
+import model.User;
 import requests.FileUploadRequest;
 import requests.LoginRequest;
+import requests.ServerErrorDisplay;
 import requests.SignUpRequest;
 
 import java.io.IOException;
@@ -22,9 +24,17 @@ public class ClientHandler implements Runnable{
             while (true) {
                 ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
                 Object inputObject = inputStream.readObject();
-                ObjectOutputStream outputStream;
+
                 if (inputObject instanceof SignUpRequest) {
-                    //todo: do what you gotta do
+                    SignUpRequest req = (SignUpRequest) inputObject;
+                    if (UserAuthentication.getInstance().usernameExists(req.getUsername())) {
+                        ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+                        outputStream.writeObject(new ServerErrorDisplay("Username Exists"));
+                        continue;
+                    }
+                    User user = new User(req.getUsername(), req.getPassword());
+                    UserHandler.getInstance().createNewUser(user);
+
                 } else if (inputObject instanceof LoginRequest) {
                     //todo: do what you gotta do
                 } else if (inputObject instanceof FileUploadRequest) {
@@ -32,8 +42,7 @@ public class ClientHandler implements Runnable{
                 } else if (true) {
 
                 }
-                outputStream = new ObjectOutputStream(socket.getOutputStream());
-                outputStream.writeObject(new Object());
+                inputStream.close();
 
 
             }
