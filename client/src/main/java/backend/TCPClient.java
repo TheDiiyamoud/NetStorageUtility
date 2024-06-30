@@ -56,27 +56,30 @@ public class TCPClient {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
             while (true) {
-                if (!socket.isClosed()) {
-                    if (request != null) {
-                        objectOutputStream.writeObject(request);
-                        objectOutputStream.flush();
-                        resetRequest();
+                try {
+                    if (!socket.isClosed()) {
+                        if (request != null) {
+                            objectOutputStream.writeObject(request);
+                            objectOutputStream.flush();
+                            resetRequest();
+                            Thread.sleep(5000);
+                        } else {
+                            objectOutputStream.writeObject(new PingRequest());
+                            objectOutputStream.flush();
+                            System.out.println("Pinging");
+                        }
+                        Object o = objectInputStream.readObject();
+                        if (!(o instanceof PingResponse) && o != null) {
+                            setResponse((ServerResponse) o);
+                        }
+
+                        Thread.sleep(1000);
+
                     } else {
-                        objectOutputStream.writeObject(new PingRequest());
-                        objectOutputStream.flush();
-                        System.out.println("Pinging");
+                        break;
                     }
-                    Object o = objectInputStream.readObject();
-                    if (!(o instanceof PingResponse) && o != null) {
-                        setResponse((ServerResponse) o);
-                    }
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e)  {
-                        e.printStackTrace();
-                    }
-                } else {
-                    break;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
             objectOutputStream.close();
