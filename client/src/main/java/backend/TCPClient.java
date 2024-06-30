@@ -10,14 +10,15 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class TCPClient implements Runnable {
     private static TCPClient instance;
-    private final Socket socket;
-    Thread thread;
+    private volatile Socket socket;
+    private Thread thread;
     private Request request = null;
     private ServerResponse serverResponse = null;
-
+    private volatile boolean isRunning = true;
     private TCPClient() throws IOException {
         this.socket = new Socket("localhost", 4321);
         thread = new Thread(this);
@@ -65,7 +66,7 @@ public class TCPClient implements Runnable {
         try {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-            while (true) {
+            while (isRunning) {
 
                 if (!socket.isClosed()) {
                     if (request != null) {
@@ -76,6 +77,7 @@ public class TCPClient implements Runnable {
                         objectOutputStream.writeObject(new PingRequest());
                         objectOutputStream.flush();
                     }
+
                     Object o = objectInputStream.readObject();
                     if (!(o instanceof PingResponse) && o != null) {
                         setResponse((ServerResponse) o);
@@ -91,6 +93,8 @@ public class TCPClient implements Runnable {
 
 
             //TODO: Handle proper response
+        } catch (SocketException ex) {
+            System.out.println("Socket closed");
         } catch (IOException | ClassNotFoundException e) {
             try {
                 socket.close();
@@ -102,8 +106,9 @@ public class TCPClient implements Runnable {
         }
     }
 
-    public void killSocket() {
+    public synchronized void killSocket() {
         try {
+            isRunning = false;
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
