@@ -32,12 +32,15 @@ public class ClientHandler implements Runnable {
             while (true) {
                 if (!socket.isClosed()) {
                     Object inputObject = inputStream.readObject();
+
+
                     if (inputObject instanceof PingRequest) {
                         outputStream.writeObject(new PingResponse("Ping"));
                         outputStream.flush();
                     }
-                    else if (inputObject instanceof SignUpRequest) {
 
+
+                    else if (inputObject instanceof SignUpRequest) {
                         SignUpRequest req = (SignUpRequest) inputObject;
                         if (UserAuthentication.getInstance().usernameExists(req.getUsername())) {
                             outputStream.writeObject(new ServerErrorDisplay("Username Exists"));
@@ -48,6 +51,8 @@ public class ClientHandler implements Runnable {
                             outputStream.writeObject(new SuccessfulLoginResponse("Signed up successfully"));
                             outputStream.flush();
                         }
+
+
                     } else if (inputObject instanceof LoginRequest) {
                         LoginRequest req = (LoginRequest) inputObject;
                         if (UserAuthentication.getInstance().usernameExists(req.getUsername())) {
@@ -62,6 +67,8 @@ public class ClientHandler implements Runnable {
                             outputStream.writeObject(new ServerErrorDisplay("No such user exists"));
                             outputStream.flush();
                         }
+
+
 
                     } else if (inputObject instanceof FileUploadRequest) {
                         //todo: do what you gotta do
