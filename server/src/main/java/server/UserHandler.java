@@ -26,6 +26,7 @@ public class UserHandler {
             FileOutputStream outputStream = new FileOutputStream(userPath);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
             objectOutputStream.writeObject(user);
+            objectOutputStream.flush();
             outputStream.close();
             objectOutputStream.close();
 

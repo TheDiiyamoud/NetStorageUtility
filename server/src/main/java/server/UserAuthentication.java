@@ -33,6 +33,8 @@ public class UserAuthentication {
             FileInputStream in = new FileInputStream(userFilePath);
             ObjectInputStream objectInputStream = new ObjectInputStream(in);
             User user = (User) objectInputStream.readObject();
+            objectInputStream.close();
+            in.close();
             return verifyPassword(user, request.getPassword());
 
         } catch (IOException | ClassNotFoundException e) {

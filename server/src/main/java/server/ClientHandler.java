@@ -59,7 +59,7 @@ public class ClientHandler implements Runnable {
 
                     } else if (inputObject instanceof FileUploadRequest) {
                         //todo: do what you gotta do
-                    } else if (true) {
+                    } else {
 
                     }
                     inputStream.close();
