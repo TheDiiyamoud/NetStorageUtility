@@ -85,7 +85,6 @@ public class ClientHandler implements Runnable {
 
         } catch (EOFException e) {
             try {
-                System.out.println("EOF EXCEPTION THROWN: Closing the socket!");
                 socket.close();
             } catch (IOException n) {
                 n.printStackTrace();

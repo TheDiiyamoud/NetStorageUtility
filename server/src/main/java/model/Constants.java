@@ -18,7 +18,6 @@ public class Constants {
     }
 
     public static synchronized String getUserObjectPath(String username) {
-        System.out.println(getUserPath(username));
         return getUserPath(username) + File.separator + "user.ser";
     }
 }
