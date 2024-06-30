@@ -6,8 +6,9 @@ import javax.swing.*;
 public class Client {
     public static void main(String[] args) throws Exception{
 
-        TCPClient.getInstance();
+
         SwingUtilities.invokeLater(MainFrame::getInstance);
+        TCPClient.getInstance();
 
 
 

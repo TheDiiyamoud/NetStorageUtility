@@ -5,19 +5,22 @@ import requests.Request;
 import responses.PingResponse;
 import responses.ServerResponse;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class TCPClient {
+public class TCPClient implements Runnable{
     private static TCPClient instance;
     private final Socket socket;
     private Request request = null;
     private ServerResponse serverResponse = null;
+    Thread thread;
     private TCPClient() throws IOException {
         this.socket = new Socket("localhost", 4321);
-        startClient();
+        thread = new Thread(this);
+        thread.start();
     }
 
 
@@ -28,8 +31,13 @@ public class TCPClient {
         return instance;
     }
 
-    public ServerResponse sendRequest(Request request) {
+    public synchronized ServerResponse sendRequest(Request request) {
         setRequest(request);
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         ServerResponse r = serverResponse;
         resetResponse();
         return r;
@@ -51,7 +59,8 @@ public class TCPClient {
         this.serverResponse = null;
     }
 
-    private void startClient() {
+    @Override
+    public void run() {
         try {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
@@ -61,19 +70,16 @@ public class TCPClient {
                         if (request != null) {
                             objectOutputStream.writeObject(request);
                             objectOutputStream.flush();
-                            resetRequest();
-                            Thread.sleep(5000);
                         } else {
                             objectOutputStream.writeObject(new PingRequest());
                             objectOutputStream.flush();
-                            System.out.println("Pinging");
                         }
                         Object o = objectInputStream.readObject();
                         if (!(o instanceof PingResponse) && o != null) {
                             setResponse((ServerResponse) o);
                         }
 
-                        Thread.sleep(1000);
+                        Thread.sleep(1500);
 
                     } else {
                         break;
