@@ -102,5 +102,13 @@ public class TCPClient implements Runnable {
         }
     }
 
+    public void killSocket() {
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
