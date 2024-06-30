@@ -12,9 +12,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class ClientHandler implements Runnable{
+public class ClientHandler implements Runnable {
 
     private final Socket socket;
+
     public ClientHandler(Socket socket) {
         this.socket = socket;
     }
@@ -23,41 +24,44 @@ public class ClientHandler implements Runnable{
     public void run() {
         try {
             while (true) {
-                ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
-                Object inputObject = inputStream.readObject();
+                if (!socket.isClosed()) {
 
-                if (inputObject instanceof SignUpRequest) {
-                    ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
-                    SignUpRequest req = (SignUpRequest) inputObject;
-                    if (UserAuthentication.getInstance().usernameExists(req.getUsername())) {
-                        outputStream.writeObject(new ServerErrorDisplay("Username Exists"));
-                        continue;
-                    }
-                    User user = new User(req.getUsername(), req.getPassword());
-                    UserHandler.getInstance().createNewUser(user);
-                    outputStream.writeObject(new SuccessfulLoginResponse("Signed up successfully"));
-                    outputStream.close();
-                } else if (inputObject instanceof LoginRequest) {
-                    ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
-                    LoginRequest req = (LoginRequest) inputObject;
-                    if (UserAuthentication.getInstance().usernameExists(req.getUsername())) {
-                        if (UserAuthentication.getInstance().verifyLogin(req)) {
-                            outputStream.writeObject(new SuccessfulLoginResponse("Logged in successfully"));
-                        } else {
-                            outputStream.writeObject(new ServerErrorDisplay("Wrong password"));
+
+                    ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
+                    Object inputObject = inputStream.readObject();
+
+                    if (inputObject instanceof SignUpRequest) {
+                        ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+                        SignUpRequest req = (SignUpRequest) inputObject;
+                        if (UserAuthentication.getInstance().usernameExists(req.getUsername())) {
+                            outputStream.writeObject(new ServerErrorDisplay("Username Exists"));
+                            continue;
                         }
-                    } else {
-                        outputStream.writeObject(new ServerErrorDisplay("No such user exists"));
+                        User user = new User(req.getUsername(), req.getPassword());
+                        UserHandler.getInstance().createNewUser(user);
+                        outputStream.writeObject(new SuccessfulLoginResponse("Signed up successfully"));
+                        outputStream.close();
+                    } else if (inputObject instanceof LoginRequest) {
+                        ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+                        LoginRequest req = (LoginRequest) inputObject;
+                        if (UserAuthentication.getInstance().usernameExists(req.getUsername())) {
+                            if (UserAuthentication.getInstance().verifyLogin(req)) {
+                                outputStream.writeObject(new SuccessfulLoginResponse("Logged in successfully"));
+                            } else {
+                                outputStream.writeObject(new ServerErrorDisplay("Wrong password"));
+                            }
+                        } else {
+                            outputStream.writeObject(new ServerErrorDisplay("No such user exists"));
+                        }
+                        outputStream.close();
+                    } else if (inputObject instanceof FileUploadRequest) {
+                        //todo: do what you gotta do
+                    } else if (true) {
+
                     }
-                    outputStream.close();
-                } else if (inputObject instanceof FileUploadRequest) {
-                    //todo: do what you gotta do
-                } else if (true) {
+                    inputStream.close();
 
                 }
-                inputStream.close();
-
-
             }
         } catch (IOException | ClassNotFoundException e) {
             try {
