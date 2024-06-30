@@ -35,6 +35,7 @@ public class ClientHandler implements Runnable {
                     if (inputObject instanceof PingRequest) {
                         outputStream.writeObject(new PingResponse("Ping"));
                         outputStream.flush();
+                        System.out.println("Ping response sent");
                     }
                     else if (inputObject instanceof SignUpRequest) {
 

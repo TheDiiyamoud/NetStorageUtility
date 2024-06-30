@@ -64,6 +64,7 @@ public class TCPClient {
                     } else {
                         objectOutputStream.writeObject(new PingRequest());
                         objectOutputStream.flush();
+                        System.out.println("Pinging");
                     }
                     Object o = objectInputStream.readObject();
                     if (!(o instanceof PingResponse) && o != null) {
