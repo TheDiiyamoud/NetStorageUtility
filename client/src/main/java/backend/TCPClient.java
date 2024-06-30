@@ -19,6 +19,7 @@ public class TCPClient implements Runnable {
     private Request request = null;
     private ServerResponse serverResponse = null;
     private volatile boolean isRunning = true;
+    private String currentUsername;
     private TCPClient() throws IOException {
         this.socket = new Socket("localhost", 4321);
         thread = new Thread(this);
@@ -113,6 +114,14 @@ public class TCPClient implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setCurrentUsername(String currentUsername) {
+        this.currentUsername = currentUsername;
+    }
+
+    public void resetCurrentUsername() {
+        this.currentUsername = null;
     }
 
 

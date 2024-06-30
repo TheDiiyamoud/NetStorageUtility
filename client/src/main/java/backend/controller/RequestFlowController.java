@@ -8,6 +8,7 @@ import responses.ServerResponse;
 import responses.SuccessfulLoginResponse;
 import view.MainPanel;
 import view.registration.LoginPanel;
+import view.registration.RegistryPanel;
 import view.registration.SignUpPanel;
 import view.userpanel.HomePanel;
 
@@ -56,6 +57,15 @@ public class RequestFlowController {
             } else {
                 System.out.println("RETURN OBJECT WAS NULL");
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void logOut() {
+        try {
+            TCPClient.getInstance().resetCurrentUsername();
+            MainPanel.getInstance().addComponent(RegistryPanel.getInstance());
         } catch (IOException e) {
             e.printStackTrace();
         }

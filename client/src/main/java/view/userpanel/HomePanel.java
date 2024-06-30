@@ -1,5 +1,7 @@
 package view.userpanel;
 
+import backend.controller.RequestFlowController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -90,7 +92,7 @@ public class HomePanel extends JPanel {
             // TODO: Do what you gotta do
         });
         logoutButton.addActionListener((ActionEvent e) -> {
-            // TODO: Do what you gotta do
+            RequestFlowController.getInstance().logOut();
         });
 
     }
