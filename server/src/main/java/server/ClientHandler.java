@@ -9,6 +9,7 @@ import responses.ServerErrorDisplay;
 import requests.SignUpRequest;
 import responses.SuccessfulLoginResponse;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -82,6 +83,13 @@ public class ClientHandler implements Runnable {
                 }
             }
 
+        } catch (EOFException e) {
+            try {
+                System.out.println("EOF EXCEPTION THROWN: Closing the socket!");
+                socket.close();
+            } catch (IOException n) {
+                n.printStackTrace();
+            }
         } catch (IOException | ClassNotFoundException e) {
             try {
                 System.out.println("Something went wrong, socket is closing...");
