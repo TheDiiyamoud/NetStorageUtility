@@ -11,12 +11,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class TCPClient implements Runnable{
+public class TCPClient implements Runnable {
     private static TCPClient instance;
     private final Socket socket;
+    Thread thread;
     private Request request = null;
     private ServerResponse serverResponse = null;
-    Thread thread;
+
     private TCPClient() throws IOException {
         this.socket = new Socket("localhost", 4321);
         thread = new Thread(this);
@@ -24,7 +25,7 @@ public class TCPClient implements Runnable{
     }
 
 
-    public static TCPClient getInstance() throws IOException{
+    public static TCPClient getInstance() throws IOException {
         if (instance == null) {
             instance = new TCPClient();
         }
@@ -65,29 +66,25 @@ public class TCPClient implements Runnable{
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
             while (true) {
-                try {
-                    if (!socket.isClosed()) {
-                        if (request != null) {
-                            objectOutputStream.writeObject(request);
-                            objectOutputStream.flush();
-                            resetRequest();
-                        } else {
-                            objectOutputStream.writeObject(new PingRequest());
-                            objectOutputStream.flush();
-                        }
-                        Object o = objectInputStream.readObject();
-                        if (!(o instanceof PingResponse) && o != null) {
-                            setResponse((ServerResponse) o);
-                        }
 
-                        Thread.sleep(1500);
-
+                if (!socket.isClosed()) {
+                    if (request != null) {
+                        objectOutputStream.writeObject(request);
+                        objectOutputStream.flush();
+                        resetRequest();
                     } else {
-                        break;
+                        objectOutputStream.writeObject(new PingRequest());
+                        objectOutputStream.flush();
                     }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Object o = objectInputStream.readObject();
+                    if (!(o instanceof PingResponse) && o != null) {
+                        setResponse((ServerResponse) o);
+                    }
+
+                } else {
+                    break;
                 }
+
             }
             objectOutputStream.close();
             objectInputStream.close();
