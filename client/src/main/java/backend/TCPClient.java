@@ -70,6 +70,7 @@ public class TCPClient implements Runnable{
                         if (request != null) {
                             objectOutputStream.writeObject(request);
                             objectOutputStream.flush();
+                            resetRequest();
                         } else {
                             objectOutputStream.writeObject(new PingRequest());
                             objectOutputStream.flush();
