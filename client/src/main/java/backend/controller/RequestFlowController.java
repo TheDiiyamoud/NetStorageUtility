@@ -49,7 +49,7 @@ public class RequestFlowController {
         try {
             ServerResponse r = TCPClient.getInstance().sendRequest(new LoginRequest(username, new String(password)));
             if (r instanceof ServerErrorDisplay) {
-                SignUpPanel.getInstance().signupFailed();
+                LoginPanel.getInstance().loginFailed();
             } else if (r instanceof SuccessfulLoginResponse) {
                 MainPanel.getInstance().addComponent(HomePanel.getInstance());
                 LoginPanel.getInstance().resetPanel();
