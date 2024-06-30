@@ -30,12 +30,12 @@ public class RequestFlowController {
     public void sendSignupRequest(String username, char[] password) {
         try {
             ServerResponse r = TCPClient.getInstance().sendRequest(new SignUpRequest(username, new String(password)));
-            if (r instanceof ServerErrorDisplay | r == null) {
+            if (r instanceof ServerErrorDisplay) {
                 SignUpPanel.getInstance().signupFailed();
-                System.out.println("SIGN UP FAILED. RETURN OBJECT: " + r);
             } else if (r instanceof SuccessfulLoginResponse) {
                 MainPanel.getInstance().addComponent(HomePanel.getInstance());
-                System.out.println("LOGGED IN SUCCESSFULLY!");
+            } else {
+                System.out.println("RETURN OBJECT WAS NULL!");
             }
 
         } catch (IOException e) {
@@ -45,7 +45,14 @@ public class RequestFlowController {
 
     public void sendLoginRequest(String username, char[] password) {
         try {
-            TCPClient.getInstance().sendRequest(new LoginRequest(username, new String(password)));
+            ServerResponse r = TCPClient.getInstance().sendRequest(new LoginRequest(username, new String(password)));
+            if (r instanceof ServerErrorDisplay) {
+                SignUpPanel.getInstance().signupFailed();
+            } else if (r instanceof SuccessfulLoginResponse) {
+                MainPanel.getInstance().addComponent(HomePanel.getInstance());
+            } else {
+                System.out.println("RETURN OBJECT WAS NULL");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

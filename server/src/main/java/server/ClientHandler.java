@@ -32,8 +32,6 @@ public class ClientHandler implements Runnable {
             while (true) {
                 if (!socket.isClosed()) {
                     Object inputObject = inputStream.readObject();
-
-
                     if (inputObject instanceof PingRequest) {
                         outputStream.writeObject(new PingResponse("Ping"));
                         outputStream.flush();
