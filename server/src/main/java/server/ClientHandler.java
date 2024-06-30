@@ -3,6 +3,8 @@ package server;
 import model.User;
 import requests.FileUploadRequest;
 import requests.LoginRequest;
+import requests.PingRequest;
+import responses.PingResponse;
 import responses.ServerErrorDisplay;
 import requests.SignUpRequest;
 import responses.SuccessfulLoginResponse;
@@ -30,18 +32,22 @@ public class ClientHandler implements Runnable {
             while (true) {
                 if (!socket.isClosed()) {
                     Object inputObject = inputStream.readObject();
-                    if (inputObject instanceof SignUpRequest) {
+                    if (inputObject instanceof PingRequest) {
+                        outputStream.writeObject(new PingResponse("Ping"));
+                        outputStream.flush();
+                    }
+                    else if (inputObject instanceof SignUpRequest) {
 
                         SignUpRequest req = (SignUpRequest) inputObject;
                         if (UserAuthentication.getInstance().usernameExists(req.getUsername())) {
                             outputStream.writeObject(new ServerErrorDisplay("Username Exists"));
                             outputStream.flush();
-                            continue;
+                        } else {
+                            User user = new User(req.getUsername(), req.getPassword());
+                            UserHandler.getInstance().createNewUser(user);
+                            outputStream.writeObject(new SuccessfulLoginResponse("Signed up successfully"));
+                            outputStream.flush();
                         }
-                        User user = new User(req.getUsername(), req.getPassword());
-                        UserHandler.getInstance().createNewUser(user);
-                        outputStream.writeObject(new SuccessfulLoginResponse("Signed up successfully"));
-                        outputStream.flush();
                     } else if (inputObject instanceof LoginRequest) {
                         LoginRequest req = (LoginRequest) inputObject;
                         if (UserAuthentication.getInstance().usernameExists(req.getUsername())) {
@@ -62,13 +68,18 @@ public class ClientHandler implements Runnable {
                     } else {
 
                     }
+
+                } else {
                     inputStream.close();
                     outputStream.close();
+                    System.out.println("Socket is closed");
+                    break;
                 }
             }
 
         } catch (IOException | ClassNotFoundException e) {
             try {
+                System.out.println("Something went wrong, socket is closing...");
                 socket.close();
             } catch (IOException ex) {
                 ex.printStackTrace();
