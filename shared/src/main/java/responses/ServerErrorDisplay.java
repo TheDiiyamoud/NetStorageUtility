@@ -2,14 +2,11 @@ package responses;
 
 import requests.Request;
 
-public class ServerErrorDisplay extends Request {
-    private String message;
+public class ServerErrorDisplay extends ServerResponse {
+
 
     public ServerErrorDisplay(String message) {
-        this.message = message;
+        super(message);
     }
 
-    public String getMessage() {
-        return message;
-    }
 }

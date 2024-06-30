@@ -2,14 +2,10 @@ package responses;
 
 import requests.Request;
 
-public class SuccessfulLoginResponse extends Request {
-    private String message;
+public class SuccessfulLoginResponse extends ServerResponse {
 
     public SuccessfulLoginResponse(String message) {
-        this.message = message;
+        super(message);
     }
 
-    public String getMessage() {
-        return message;
-    }
 }
