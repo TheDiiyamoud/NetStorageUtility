@@ -27,6 +27,7 @@ public class TCPClient {
         try {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             objectOutputStream.writeObject(request);
+            objectOutputStream.flush();
             ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
             ServerResponse response = (ServerResponse) objectInputStream.readObject();
             objectOutputStream.close();
