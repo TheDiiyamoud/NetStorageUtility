@@ -72,7 +72,6 @@ public class LoginPanel extends JPanel {
             if (!usernameField.getText().equals("")) {
                 if (passwordField.getPassword().length > 0) {
                     RequestFlowController.getInstance().sendLoginRequest(usernameField.getText(), passwordField.getPassword());
-                    this.resetPanel();
                 } else {
                     errorDisplayLabel.setText("PASSWORD FIELD SHALL NOT BE EMPTY");
                 }

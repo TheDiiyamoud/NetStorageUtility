@@ -7,6 +7,7 @@ import responses.ServerErrorDisplay;
 import responses.ServerResponse;
 import responses.SuccessfulLoginResponse;
 import view.MainPanel;
+import view.registration.LoginPanel;
 import view.registration.SignUpPanel;
 import view.userpanel.HomePanel;
 
@@ -34,6 +35,7 @@ public class RequestFlowController {
                 SignUpPanel.getInstance().signupFailed();
             } else if (r instanceof SuccessfulLoginResponse) {
                 MainPanel.getInstance().addComponent(HomePanel.getInstance());
+                SignUpPanel.getInstance().resetPanel();
             } else {
                 System.out.println("RETURN OBJECT WAS NULL!");
             }
@@ -50,6 +52,7 @@ public class RequestFlowController {
                 SignUpPanel.getInstance().signupFailed();
             } else if (r instanceof SuccessfulLoginResponse) {
                 MainPanel.getInstance().addComponent(HomePanel.getInstance());
+                LoginPanel.getInstance().resetPanel();
             } else {
                 System.out.println("RETURN OBJECT WAS NULL");
             }
