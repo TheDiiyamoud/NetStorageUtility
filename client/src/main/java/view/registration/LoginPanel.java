@@ -71,8 +71,8 @@ public class LoginPanel extends JPanel {
         proceedButton.addActionListener((ActionEvent e) -> {
             if (!usernameField.getText().equals("")) {
                 if (passwordField.getPassword().length > 0) {
-                    this.resetPanel();
                     RequestFlowController.getInstance().sendLoginRequest(usernameField.getText(), passwordField.getPassword());
+                    this.resetPanel();
                 } else {
                     errorDisplayLabel.setText("PASSWORD FIELD SHALL NOT BE EMPTY");
                 }
@@ -81,8 +81,8 @@ public class LoginPanel extends JPanel {
             }
         });
         previousMenuButton.addActionListener((ActionEvent e) -> {
-            this.resetPanel();
             MainPanel.getInstance().addComponent(RegistryPanel.getInstance());
+            this.resetPanel();
         });
     }
     public static LoginPanel getInstance() {

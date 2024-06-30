@@ -83,8 +83,8 @@ public class SignUpPanel extends JPanel {
         proceedButton.addActionListener((ActionEvent e)-> {
             if (!usernameField.getText().equals("")) {
                 if (Arrays.equals(passwordField.getPassword(), passwordConfirmField.getPassword()) && passwordField.getPassword().length > 0) {
-                    this.resetPanel();
                     RequestFlowController.getInstance().sendSignupRequest(usernameField.getText(), passwordConfirmField.getPassword());
+                    this.resetPanel();
                 } else {
                     signupFailureDisplay.setText("PASSWORDS ARE EITHER EMPTY OR DON'T MATCH");
                 }
@@ -93,8 +93,8 @@ public class SignUpPanel extends JPanel {
             }
         });
         previousMenu.addActionListener((ActionEvent e) -> {
-            this.resetPanel();
             MainPanel.getInstance().addComponent(RegistryPanel.getInstance());
+            this.resetPanel();
         });
     }
 
