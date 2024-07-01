@@ -2,7 +2,6 @@ package backend.controller;
 
 import backend.TCPClient;
 import backend.file.FileDecomposer;
-import backend.file.UnusedUDPPorts;
 import requests.FileUploadRequest;
 import requests.LoginRequest;
 import requests.SignUpRequest;
@@ -18,7 +17,6 @@ import view.userpanel.HomePanel;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class RequestFlowController {
     private static RequestFlowController instance;
@@ -86,8 +84,7 @@ public class RequestFlowController {
             ServerResponse r = TCPClient.getInstance().sendRequest(
                     new FileUploadRequest(TCPClient.getInstance().getCurrentUsername(),
                             file.getName(),
-                            threadCount,
-                            UnusedUDPPorts.getUnusedUDPPorts(threadCount)));
+                            threadCount));
             if (r instanceof FileUploadAcceptedResponse) {
                 FileUploadAcceptedResponse res = (FileUploadAcceptedResponse) r;
                 int[] portsNumbers = res.getPorts();

@@ -6,18 +6,13 @@ public class FileUploadRequest extends Request{
     private int threadCount;
     private String fileName;
     private String username;
-    private int[] unusedPorts;
-    public FileUploadRequest(String username, String fileName, int threadCount, int[] unusedPorts) {
+    public FileUploadRequest(String username, String fileName, int threadCount) {
         this.threadCount = threadCount;
         this.fileName = fileName;
         this.username = username;
-        this.unusedPorts = unusedPorts;
     }
 
 
-    public int[] getUnusedPorts() {
-        return unusedPorts;
-    }
     public String getUsername() {
         return username;
     }

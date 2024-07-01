@@ -1,5 +1,6 @@
 package backend.file;
 
+import backend.Constants;
 import backend.TCPClient;
 
 import java.io.File;
@@ -59,7 +60,11 @@ public class FileDecomposer implements Runnable{
                     fos.write(buffer, 0, bytesRead);
                 }
                 if (chunkNumber < numChunks) {
-//                    new Thread(new FileSender()) //TODO: Server ports and client ports shalt be relavant
+                    new Thread(new FileSender(
+                            chunkFileName,
+                            ports[chunkNumber - 1] + 10000,
+                            ports[chunkNumber - 1],
+                            Constants.getHostName())); //TODO: Server ports and client ports shalt be relavant
                     chunkNumber++;
                 }
             }
