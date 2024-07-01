@@ -1,5 +1,7 @@
 package backend.file;
 
+import backend.TCPClient;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -10,9 +12,11 @@ public class FileDecomposer implements Runnable{
     private final String filePath;
     private final long fileSize;
     private final int numChunks;
+    private final File file;
     private int[] ports;
     public FileDecomposer(String filePath) {
          this.filePath = filePath;
+         file = new File(filePath);
          fileSize = new File(filePath).length();
          numChunks = calculateNumChunks();
     }
@@ -49,8 +53,8 @@ public class FileDecomposer implements Runnable{
             int chunkNumber = 1;
 
             while ((bytesRead = fis.read(buffer)) != -1) {
-                String chunkFileName = "chunk" + chunkNumber + ".dat";
-                chunkFileName = "/home/dii/Desktop/Destination/" + chunkFileName;
+                String chunkFileName = file.getName() + chunkNumber + ".dat";
+                chunkFileName = ClientDirectoryHandler.getUserDirectory(TCPClient.getInstance().getCurrentUsername()) + chunkFileName;
                 try (FileOutputStream fos = new FileOutputStream(chunkFileName)) {
                     fos.write(buffer, 0, bytesRead);
                 }
@@ -64,7 +68,6 @@ public class FileDecomposer implements Runnable{
             e.printStackTrace();
         }
 
-        System.out.println("Number of chunks created: " + numChunks);
 
     }
 

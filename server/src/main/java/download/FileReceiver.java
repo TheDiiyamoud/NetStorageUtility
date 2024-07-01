@@ -1,6 +1,7 @@
 package download;
 
 import UDPUtils.ByteChecksum;
+import model.Constants;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,11 +20,13 @@ public class FileReceiver implements Runnable{
     private final int serverPort;
     private final int clientPort;
     private final InetAddress ip;
+    private String fileDirectory;
 
-    public FileReceiver(String clientAddress,  int clientPort, int serverPort) throws UnknownHostException {
+    public FileReceiver(String fileDirectory, String clientAddress,  int clientPort, int serverPort) throws UnknownHostException {
         this.serverPort = serverPort;
         this.clientPort = clientPort;
         ip = InetAddress.getByName(clientAddress);
+        this.fileDirectory = fileDirectory;
     }
 
     @Override
@@ -36,8 +39,7 @@ public class FileReceiver implements Runnable{
             DatagramPacket fileNamePacket = new DatagramPacket(fileName, fileName.length);
             datagramSocket.receive(fileNamePacket);
             String fileNameString = new String(fileNamePacket.getData(), 0, fileNamePacket.getLength());
-            System.out.println("the file name is " + fileNameString);
-            File file = new File("/home/dii/Desktop/Destination/" + fileNameString);
+            File file = new File(fileDirectory + File.separator + fileNameString);
 
             fileOutputStream = new FileOutputStream(file);
             int sequence = 0;

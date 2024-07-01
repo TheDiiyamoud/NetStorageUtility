@@ -20,4 +20,13 @@ public class Constants {
     public static synchronized String getUserObjectPath(String username) {
         return getUserPath(username) + File.separator + "user.ser";
     }
+
+    public static synchronized String getFileDirectory(String username, String filename) {
+        String path = getUserPath(username) + File.separator + filename;
+        File f = new File(path);
+        if (!f.exists()) {
+            f.mkdir();
+        }
+        return path;
+    }
 }
