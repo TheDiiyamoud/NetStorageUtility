@@ -64,7 +64,7 @@ public class FileDecomposer implements Runnable{
                             chunkFileName,
                             ports[chunkNumber - 1] + 10000,
                             ports[chunkNumber - 1],
-                            Constants.getHostName())); //TODO: Server ports and client ports shalt be relavant
+                            Constants.getHostName()));
                     chunkNumber++;
                 }
             }
