@@ -27,8 +27,7 @@ public class FileDecomposer implements Runnable{
 
         int chunkSize = (int) Math.ceil((double) fileSize / numChunks);
 
-        try (
-                FileInputStream fis = new FileInputStream(filePath)) {
+        try (FileInputStream fis = new FileInputStream(filePath)) {
             byte[] buffer = new byte[chunkSize];
             int bytesRead;
             int chunkNumber = 1;
