@@ -1,6 +1,6 @@
 package requests;
 
-import java.util.ArrayList;
+
 
 public class FileUploadRequest extends Request{
     private int threadCount;
