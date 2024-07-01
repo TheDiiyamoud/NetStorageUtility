@@ -4,15 +4,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class FileDecomposer implements Runnable{
     private final String filePath;
     private final long fileSize;
     private final int numChunks;
+    private int[] ports;
     public FileDecomposer(String filePath) {
          this.filePath = filePath;
          fileSize = new File(filePath).length();
          numChunks = calculateNumChunks();
+    }
+
+    public void setPorts(int[] ports){
+        this.ports = ports;
     }
 
     private int calculateNumChunks() {
@@ -49,6 +55,7 @@ public class FileDecomposer implements Runnable{
                     fos.write(buffer, 0, bytesRead);
                 }
                 if (chunkNumber < numChunks) {
+//                    new Thread(new FileSender()) //TODO: Server ports and client ports shalt be relavant
                     chunkNumber++;
                 }
             }

@@ -1,20 +1,26 @@
 package requests;
 
+import java.util.ArrayList;
+
 public class FileUploadRequest extends Request{
-    private String fileID;
     private int threadCount;
     private String fileName;
-
-    public FileUploadRequest(String fileID, int threadCount, String fileName) {
-        this.fileID = fileID;
+    private String username;
+    private int[] unusedPorts;
+    public FileUploadRequest(String username, String fileName, int threadCount, int[] unusedPorts) {
         this.threadCount = threadCount;
         this.fileName = fileName;
+        this.username = username;
+        this.unusedPorts = unusedPorts;
     }
 
-    public String getFileID() {
-        return fileID;
-    }
 
+    public int[] getUnusedPorts() {
+        return unusedPorts;
+    }
+    public String getUsername() {
+        return username;
+    }
     public int getThreadCount() {
         return threadCount;
     }

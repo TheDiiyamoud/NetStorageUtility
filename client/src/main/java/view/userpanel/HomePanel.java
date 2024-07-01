@@ -5,6 +5,7 @@ import backend.controller.RequestFlowController;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
 
 public class HomePanel extends JPanel {
     private JButton showFilesOnServerButton;
@@ -80,7 +81,13 @@ public class HomePanel extends JPanel {
             // TODO: Do what you gotta do
         });
         uploadFileButton.addActionListener((ActionEvent e) -> {
-            // TODO: Do what you gotta do
+            JFileChooser fileChooser = new JFileChooser();
+            int response = fileChooser.showOpenDialog(null);
+
+            if (response == JFileChooser.APPROVE_OPTION) {
+                File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
+                RequestFlowController.getInstance().uploadFileRequest(file);
+            }
         });
         searchButton.addActionListener((ActionEvent e) -> {
             // TODO: Do what you gotta do
