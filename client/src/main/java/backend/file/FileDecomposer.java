@@ -47,14 +47,14 @@ public class FileDecomposer implements Runnable{
     public void run() {
 
         int chunkSize = (int) Math.ceil((double) fileSize / numChunks);
-
+        String chunkFileName = "";
         try (FileInputStream fis = new FileInputStream(filePath)) {
             byte[] buffer = new byte[chunkSize];
             int bytesRead;
             int chunkNumber = 1;
 
             while ((bytesRead = fis.read(buffer)) != -1) {
-                String chunkFileName = file.getName() + chunkNumber + ".dat";
+                chunkFileName = file.getName() + chunkNumber + ".dat";
                 chunkFileName = ClientDirectoryHandler.getUserDirectory(TCPClient.getInstance().getCurrentUsername()) + chunkFileName;
                 try (FileOutputStream fos = new FileOutputStream(chunkFileName)) {
                     fos.write(buffer, 0, bytesRead);
@@ -68,6 +68,12 @@ public class FileDecomposer implements Runnable{
                     chunkNumber++;
                 }
             }
+            new Thread(new FileSender(
+                    chunkFileName,
+                    ports[chunkNumber - 1] + 10000,
+                    ports[chunkNumber - 1],
+                    Constants.getHostName()
+            ));
         } catch (
                 IOException e) {
             e.printStackTrace();
