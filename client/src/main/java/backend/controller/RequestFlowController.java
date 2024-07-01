@@ -43,6 +43,7 @@ public class RequestFlowController {
             } else if (r instanceof SuccessfulLoginResponse) {
                 MainPanel.getInstance().addComponent(HomePanel.getInstance());
                 SignUpPanel.getInstance().resetPanel();
+                TCPClient.getInstance().setCurrentUsername(username);
             } else {
                 System.out.println("RETURN OBJECT WAS NULL!");
             }
@@ -60,6 +61,7 @@ public class RequestFlowController {
             } else if (r instanceof SuccessfulLoginResponse) {
                 MainPanel.getInstance().addComponent(HomePanel.getInstance());
                 LoginPanel.getInstance().resetPanel();
+                TCPClient.getInstance().setCurrentUsername(username);
             } else {
                 System.out.println("RETURN OBJECT WAS NULL");
             }

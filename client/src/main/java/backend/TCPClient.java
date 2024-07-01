@@ -119,7 +119,7 @@ public class TCPClient implements Runnable {
     public void setCurrentUsername(String currentUsername) {
         this.currentUsername = currentUsername;
     }
-//TODO: Set this when sign-up or login
+
 
     public String getCurrentUsername() {
         return this.currentUsername;
