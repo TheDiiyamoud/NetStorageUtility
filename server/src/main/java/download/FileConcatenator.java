@@ -4,7 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class FileConcatenator {
+public class FileConcatenator implements Runnable{
 
     private final int numChunks;
     private final String fileAddress;
@@ -14,7 +14,8 @@ public class FileConcatenator {
         this.fileAddress = fileAddress;
     }
 
-    public void concatenateFile() {
+    @Override
+    public void run() {
         String[] chunkFileNames = new String[numChunks];
 
 
