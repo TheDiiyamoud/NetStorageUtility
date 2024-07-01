@@ -5,14 +5,15 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class FileDecomposer {
+public class FileDecomposer implements Runnable{
     String filePath;
 
-    public FileDecomposer(String filePath) throws IOException{
-         filePath = "/home/dii/Desktop/Destination/filet.zip";
+    public FileDecomposer(String filePath) {
+         this.filePath = filePath;
     }
 
-    public void decomposeFile() {
+    @Override
+    public void run() {
         long fileSize = new File(filePath).length();
         int numChunks;
 
