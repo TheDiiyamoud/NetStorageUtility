@@ -31,11 +31,13 @@ public class FileSender implements Runnable{
         this.serverPort = serverPort;
         ip = InetAddress.getByName(hostName);
         fileName = file.getName().getBytes();
+        System.out.println("We're in a constructor of a file sender");
     }
 
     @Override
     public void run() {
         int sequenceNumber = 0;
+        System.out.println("The thread of udp downloading has started");
         try {
 
             datagramSocket.send(new DatagramPacket(fileName, fileName.length, ip, serverPort));

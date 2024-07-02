@@ -64,7 +64,8 @@ public class FileDecomposer implements Runnable{
                             chunkFileName,
                             ports[chunkNumber - 1] + 10000,
                             ports[chunkNumber - 1],
-                            Constants.getHostName()));
+                            Constants.getHostName())).start();
+                    System.out.println("A new chunk created with number " + chunkNumber);
                     chunkNumber++;
                 }
             }
@@ -73,7 +74,8 @@ public class FileDecomposer implements Runnable{
                     ports[chunkNumber - 1] + 10000,
                     ports[chunkNumber - 1],
                     Constants.getHostName()
-            ));
+            )).start();
+            System.out.println("A new chunk created with number " + chunkNumber);
         } catch (
                 IOException e) {
             e.printStackTrace();

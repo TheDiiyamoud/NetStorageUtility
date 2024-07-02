@@ -20,6 +20,7 @@ public class Downloader {
 
     private void startDownloadThreads() {
         for (int i = 0; i < numThreads; i++) {
+            System.out.println("Starting a new download thread number " + i);
             new Thread(new FileReceiver(
                     this,
                     Constants.getFileDirectory(request.getUsername(), request.getFileName()),
@@ -30,6 +31,7 @@ public class Downloader {
     }
 
     public synchronized void threadFinished() {
+        System.out.println("Download threads have finished. Concatenating files");
         finishedThreads++;
         if (finishedThreads == numThreads) {
             new Thread(new FileConcatenator(

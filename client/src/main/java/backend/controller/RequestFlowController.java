@@ -86,10 +86,12 @@ public class RequestFlowController {
                             file.getName(),
                             threadCount));
             if (r instanceof FileUploadAcceptedResponse) {
+                System.out.println("--------READY TO UPLOAD FILE--------");
                 FileUploadAcceptedResponse res = (FileUploadAcceptedResponse) r;
                 int[] portsNumbers = res.getPorts();
                 decomposer.setPorts(portsNumbers);
                 new Thread(decomposer).start();
+                System.out.println("------STARTED THE DECOMPOSER THREAD------");
             }
         } catch (IOException e) {
             e.printStackTrace();
