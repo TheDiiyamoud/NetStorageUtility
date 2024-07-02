@@ -37,6 +37,7 @@ public class FileConcatenator implements Runnable{
                         fos.write(buffer, 0, bytesRead);
                     }
                 }
+                new File(chunkFileName).delete();
             }
         } catch (IOException e) {
             e.printStackTrace();
