@@ -19,13 +19,19 @@ public class FileReceiver implements Runnable{
     private DatagramSocket datagramSocket = null;
     private final int serverPort;
     private final int clientPort;
-    private final InetAddress ip;
+    private InetAddress ip;
     private String fileDirectory;
+    private Downloader downloader;
 
-    public FileReceiver(String fileDirectory, String clientAddress,  int clientPort, int serverPort) throws UnknownHostException {
+    public FileReceiver(Downloader downloader,String fileDirectory, String clientAddress,  int clientPort, int serverPort) {
+        this.downloader = downloader;
         this.serverPort = serverPort;
         this.clientPort = clientPort;
-        ip = InetAddress.getByName(clientAddress);
+        try {
+            ip = InetAddress.getByName(clientAddress);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
         this.fileDirectory = fileDirectory;
     }
 
@@ -62,6 +68,7 @@ public class FileReceiver implements Runnable{
                 sequence++;
             }
             System.out.println("Total of " + sequence + " packets received");
+            downloader.threadFinished();
 
         } catch(
                 IOException e)

@@ -10,7 +10,7 @@ public class FileConcatenator implements Runnable{
     private final int numChunks;
     private final String fileSaveAddress;
     private final String fileName;
-    public FileConcatenator(int numChunks, String filePartsAddress, String fileName,String fileSaveAddress) {
+    public FileConcatenator(int numChunks, String fileName,String fileSaveAddress) {
         this.numChunks = numChunks;
         this.fileSaveAddress = fileSaveAddress;
         this.fileName = fileName;

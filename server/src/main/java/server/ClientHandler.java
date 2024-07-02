@@ -1,5 +1,6 @@
 package server;
 
+import download.Downloader;
 import download.FileReceiver;
 import model.Constants;
 import model.UnusedUDPPortGenerator;
@@ -77,13 +78,7 @@ public class ClientHandler implements Runnable {
                     } else if (inputObject instanceof FileUploadRequest) {
                         FileUploadRequest req = (FileUploadRequest) inputObject;
                         int[] ports = UnusedUDPPortGenerator.getPorts(req.getThreadCount());
-                        for (int i = 0; i < req.getThreadCount(); i++) {
-                            new Thread(new FileReceiver(
-                                    Constants.getFileDirectory(username, req.getFileName()),
-                                    "localhost",
-                                    ports[i] + 10000,
-                                    ports[i]));
-                        }
+                        new Downloader(req, ports);
                         outputStream.writeObject(new FileUploadAcceptedResponse("Suc", ports));
                         outputStream.flush();
                     } else {
