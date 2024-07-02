@@ -14,6 +14,7 @@ public class Downloader {
         this.numThreads = request.getThreadCount();
         this.finishedThreads = 0;
         this.ports = ports;
+        this.request = request;
         startDownloadThreads();
     }
 
