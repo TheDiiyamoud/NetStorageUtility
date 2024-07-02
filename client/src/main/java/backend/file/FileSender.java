@@ -31,13 +31,11 @@ public class FileSender implements Runnable{
         this.serverPort = serverPort;
         ip = InetAddress.getByName(hostName);
         fileName = file.getName().getBytes();
-        System.out.println("We're in a constructor of a file sender");
     }
 
     @Override
     public void run() {
         int sequenceNumber = 0;
-        System.out.println("The thread of udp downloading has started");
         try {
 
             datagramSocket.send(new DatagramPacket(fileName, fileName.length, ip, serverPort));
@@ -46,11 +44,9 @@ public class FileSender implements Runnable{
                 DatagramPacket receivedPacket = new DatagramPacket(packetNumberForVerification, packetNumberForVerification.length);
                 datagramSocket.receive(receivedPacket);
                 int receivedNumber = ByteBuffer.wrap(packetNumberForVerification).getInt();
-                System.out.println("I received packet number " + receivedNumber);
                 if (receivedNumber != sequenceNumber) {
                     continue;
                 }
-                System.out.println("They were equal lol");
                 int bytesRead;
                 if ((bytesRead = fileInputStream.read(buffer)) == -1) {
                     break;
@@ -61,7 +57,6 @@ public class FileSender implements Runnable{
                 datagramSocket.send(datagramPacket);
                 sequenceNumber++;
             }
-            System.out.println("TOTAL OF: " + sequenceNumber + " packets were sent");
             String eof = "END_OF_FILE";
 
             datagramSocket.send(new DatagramPacket(eof.getBytes(), eof.length(), ip, serverPort));

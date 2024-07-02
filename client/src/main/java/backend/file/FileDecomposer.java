@@ -55,7 +55,6 @@ public class FileDecomposer implements Runnable{
 
             while ((bytesRead = fis.read(buffer)) != -1) {
                 chunkFileName = file.getName() + chunkNumber + ".dat";
-                chunkFileName = ClientDirectoryHandler.getUserDirectory(TCPClient.getInstance().getCurrentUsername()) + chunkFileName;
                 try (FileOutputStream fos = new FileOutputStream(chunkFileName)) {
                     fos.write(buffer, 0, bytesRead);
                 }
@@ -65,7 +64,6 @@ public class FileDecomposer implements Runnable{
                             ports[chunkNumber - 1] + 10000,
                             ports[chunkNumber - 1],
                             Constants.getHostName())).start();
-                    System.out.println("A new chunk created with number " + chunkNumber);
                     chunkNumber++;
                 }
             }
@@ -75,7 +73,6 @@ public class FileDecomposer implements Runnable{
                     ports[chunkNumber - 1],
                     Constants.getHostName()
             )).start();
-            System.out.println("A new chunk created with number " + chunkNumber);
         } catch (
                 IOException e) {
             e.printStackTrace();

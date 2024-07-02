@@ -10,10 +10,12 @@ public class FileConcatenator implements Runnable{
     private final int numChunks;
     private final String fileSaveAddress;
     private final String fileName;
-    public FileConcatenator(int numChunks, String fileName,String fileSaveAddress) {
+    private final String fileNameAndAddress;
+    public FileConcatenator(int numChunks, String fileSaveAddress, String fileName) {
         this.numChunks = numChunks;
         this.fileSaveAddress = fileSaveAddress;
         this.fileName = fileName;
+        fileNameAndAddress = fileSaveAddress + File.separator + fileName;
     }
 
     @Override
@@ -22,11 +24,11 @@ public class FileConcatenator implements Runnable{
 
 
         for (int i = 0; i < numChunks; i++) {
-            chunkFileNames[i] = fileName + (i + 1) + ".dat";
-            chunkFileNames[i] = fileSaveAddress + File.separator + chunkFileNames[i];
+            chunkFileNames[i] = this.fileName + (i + 1) + ".dat";
+            chunkFileNames[i] = this.fileSaveAddress + File.separator + chunkFileNames[i];
         }
 
-        try (FileOutputStream fos = new FileOutputStream(fileSaveAddress)) {
+        try (FileOutputStream fos = new FileOutputStream(fileNameAndAddress)) {
             for (String chunkFileName : chunkFileNames) {
                 try (FileInputStream fis = new FileInputStream(chunkFileName)) {
                     byte[] buffer = new byte[1024];
@@ -40,7 +42,6 @@ public class FileConcatenator implements Runnable{
             e.printStackTrace();
         }
 
-        System.out.println("Chunks have been concatenated into: " + fileSaveAddress);
     }
 
 }

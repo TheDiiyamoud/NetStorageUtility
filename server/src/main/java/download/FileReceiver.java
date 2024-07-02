@@ -67,7 +67,6 @@ public class FileReceiver implements Runnable{
 
                 sequence++;
             }
-            System.out.println("Total of " + sequence + " packets received");
             downloader.threadFinished();
 
         } catch(
@@ -103,7 +102,6 @@ public class FileReceiver implements Runnable{
     private boolean checkForEOF(DatagramPacket dp) {
         String s = new String(dp.getData(), 0, dp.getLength());
         if (s.equals("END_OF_FILE")) {
-            System.out.println("TRUEEEE");
             return true;
         }
         return false;
