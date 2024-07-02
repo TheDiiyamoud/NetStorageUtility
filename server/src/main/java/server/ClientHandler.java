@@ -1,9 +1,13 @@
 package server;
 
+import download.FileReceiver;
+import model.Constants;
+import model.UnusedUDPPortGenerator;
 import model.User;
 import requests.FileUploadRequest;
 import requests.LoginRequest;
 import requests.PingRequest;
+import responses.FileUploadAcceptedResponse;
 import responses.PingResponse;
 import responses.ServerErrorDisplay;
 import requests.SignUpRequest;
@@ -20,9 +24,10 @@ public class ClientHandler implements Runnable {
     private final Socket socket;
     private ObjectInputStream inputStream;
     private ObjectOutputStream outputStream;
-
+    private String username;
     public ClientHandler(Socket socket) {
         this.socket = socket;
+        this.username = "";
     }
 
     @Override
@@ -70,7 +75,17 @@ public class ClientHandler implements Runnable {
 
 
                     } else if (inputObject instanceof FileUploadRequest) {
-                        //todo: do what you gotta do
+                        FileUploadRequest req = (FileUploadRequest) inputObject;
+                        int[] ports = UnusedUDPPortGenerator.getPorts(req.getThreadCount());
+                        for (int i = 0; i < req.getThreadCount(); i++) {
+                            new Thread(new FileReceiver(
+                                    Constants.getFileDirectory(username, req.getFileName()),
+                                    "localhost",
+                                    ports[i] + 10000,
+                                    ports[i]));
+                        }
+                        outputStream.writeObject(new FileUploadAcceptedResponse("Suc", ports));
+                        outputStream.flush();
                     } else {
 
                     }
@@ -82,7 +97,6 @@ public class ClientHandler implements Runnable {
                     break;
                 }
             }
-
         } catch (EOFException e) {
             try {
                 socket.close();
