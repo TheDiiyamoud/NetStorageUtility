@@ -1,7 +1,6 @@
 package download;
 
-import UDPUtils.ByteChecksum;
-import model.Constants;
+import udp.UDPUtils.ByteChecksum;
 
 import java.io.File;
 import java.io.FileOutputStream;
