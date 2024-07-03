@@ -33,7 +33,7 @@ public class ByteChecksum {
     public boolean verifyPacketIntegrity(DatagramPacket datagramPacket) {
         byte[] data = datagramPacket.getData();
         byte[] hash = new byte[16];
-        byte[] actualData = new byte[1028];
+        byte[] actualData = new byte[datagramPacket.getLength() - 16];
         System.arraycopy(data, 0, actualData, 0, actualData.length);
         System.arraycopy(data, actualData.length, hash, 0, hash.length);
         byte[] calculatedHash = getMD5Hash(actualData);

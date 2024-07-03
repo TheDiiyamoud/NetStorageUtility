@@ -17,8 +17,8 @@ public class UDPacketCreator {
         return instance;
     }
 
-    public DatagramPacket getSequencedPacket(byte[] buffer, int length, int sequenceNumber, InetAddress ipAddress, int port) {
-        byte[] newBuffer = new byte[1028];
+    public DatagramPacket getSequencedPacket(byte[] buffer, int sequenceNumber, InetAddress ipAddress, int port) {
+        byte[] newBuffer = new byte[buffer.length + 4];
 
         // Copying the contents of data buffer to the 4 -> 1027 slots in the new array
         System.arraycopy(buffer, 0, newBuffer, 4, buffer.length);

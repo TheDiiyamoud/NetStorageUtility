@@ -9,6 +9,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 public class FileSender implements Runnable{
 
@@ -47,13 +48,16 @@ public class FileSender implements Runnable{
                 if (receivedNumber != sequenceNumber) {
                     continue;
                 }
-                int bytesRead;
-                if ((bytesRead = fileInputStream.read(buffer)) == -1) {
+                int bytesRead = fileInputStream.read(buffer);
+                if (bytesRead == -1) {
                     break;
                 }
+                byte[] bufferToBeSent;
+                bufferToBeSent = Arrays.copyOf(buffer, bytesRead); // Adjusting the size of final buffer.
 
 
-                DatagramPacket datagramPacket = UDPacketCreator.getInstance().getSequencedPacket(buffer, bytesRead, sequenceNumber,ip, serverPort);
+
+                DatagramPacket datagramPacket = UDPacketCreator.getInstance().getSequencedPacket(bufferToBeSent, sequenceNumber,ip, serverPort);
                 datagramSocket.send(datagramPacket);
                 sequenceNumber++;
             }

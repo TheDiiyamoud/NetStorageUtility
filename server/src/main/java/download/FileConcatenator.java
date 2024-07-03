@@ -42,6 +42,7 @@ public class FileConcatenator implements Runnable{
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("Finished downloading file.");
 
     }
 

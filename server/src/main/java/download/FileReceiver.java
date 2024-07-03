@@ -41,7 +41,6 @@ public class FileReceiver implements Runnable{
             datagramSocket = new DatagramSocket(serverPort);
             byte[] buffer = new byte[1044];
             byte[] fileName = new byte[65000];
-            byte[] bufferToWrite = new byte[1024];
             DatagramPacket fileNamePacket = new DatagramPacket(fileName, fileName.length);
             datagramSocket.receive(fileNamePacket);
             String fileNameString = new String(fileNamePacket.getData(), 0, fileNamePacket.getLength());
@@ -53,13 +52,13 @@ public class FileReceiver implements Runnable{
                 datagramSocket.send(new DatagramPacket(ByteBuffer.allocate(4).putInt(sequence).array(), 4, ip, clientPort));
                 DatagramPacket datagramPacket = new DatagramPacket(buffer, 1044);
                 datagramSocket.receive(datagramPacket);
-                boolean isReceivedCompletely = byteChecksum.verifyPacketIntegrity(datagramPacket);
-                boolean hasCorrectOrder = getPacketNumber(datagramPacket.getData()) == sequence;
                 if (checkForEOF(datagramPacket)) {
                     break;
                 }
+                boolean isReceivedCompletely = byteChecksum.verifyPacketIntegrity(datagramPacket);
+                boolean hasCorrectOrder = getPacketNumber(datagramPacket.getData()) == sequence;
                 if (isReceivedCompletely && hasCorrectOrder) {
-                    bufferToWrite = stripData(datagramPacket);
+                    byte[] bufferToWrite = stripData(datagramPacket);
                     fileOutputStream.write(bufferToWrite);
                 } else {
                     continue;
@@ -111,8 +110,9 @@ public class FileReceiver implements Runnable{
 
     private byte[] stripData(DatagramPacket packet) {
         byte[] data = packet.getData();
-        byte[] usefulDate = new byte[1024];
-        System.arraycopy(data, 4, usefulDate, 0, usefulDate.length);
-        return usefulDate;
+        int dataLength = packet.getLength() - (16 + 4);
+        byte[] usefulData = new byte[dataLength];
+        System.arraycopy(data, 4, usefulData, 0, usefulData.length);
+        return usefulData;
     }
 }
