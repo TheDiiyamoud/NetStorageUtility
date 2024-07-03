@@ -2,6 +2,7 @@ package backend.controller;
 
 import backend.TCPClient;
 import backend.file.FileDecomposer;
+import backend.file.Uploader;
 import requests.FileUploadRequest;
 import requests.LoginRequest;
 import requests.SignUpRequest;
@@ -86,10 +87,8 @@ public class RequestFlowController {
                             file.getName(),
                             threadCount));
             if (r instanceof FileUploadAcceptedResponse) {
-                FileUploadAcceptedResponse res = (FileUploadAcceptedResponse) r;
-                int[] portsNumbers = res.getPorts();
-                decomposer.setPorts(portsNumbers);
-                new Thread(decomposer).start();
+                FileUploadAcceptedResponse response = (FileUploadAcceptedResponse) r;
+                new Uploader(response, decomposer);
             }
         } catch (IOException e) {
             e.printStackTrace();

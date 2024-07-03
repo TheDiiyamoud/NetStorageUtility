@@ -20,9 +20,10 @@ public class FileSender implements Runnable{
     private final DatagramSocket datagramSocket;
     private final InetAddress ip;
     private final int serverPort;
+    private final Uploader uploader;
 
 
-    public FileSender(String filePathName, int clientPort, int serverPort, String hostName) throws IOException {
+    public FileSender(String filePathName, int clientPort, int serverPort, String hostName, Uploader uploader) throws IOException {
         File file = new File(filePathName);
         buffer = new byte[1024];
         packetNumberForVerification = new byte[1024];
@@ -32,6 +33,7 @@ public class FileSender implements Runnable{
         this.serverPort = serverPort;
         ip = InetAddress.getByName(hostName);
         fileName = file.getName().getBytes();
+        this.uploader = uploader;
     }
 
     @Override
@@ -66,7 +68,7 @@ public class FileSender implements Runnable{
             datagramSocket.send(new DatagramPacket(eof.getBytes(), eof.length(), ip, serverPort));
             datagramSocket.close();
             fileInputStream.close();
-
+            uploader.threadFinished();
 
         } catch (
                 IOException e) {

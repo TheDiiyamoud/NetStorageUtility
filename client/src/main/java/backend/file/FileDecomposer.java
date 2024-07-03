@@ -15,16 +15,24 @@ public class FileDecomposer implements Runnable{
     private final int numChunks;
     private final File file;
     private int[] ports;
+    private final String[] chunkNames;
+    private Uploader uploader;
     public FileDecomposer(String filePath) {
          this.filePath = filePath;
          file = new File(filePath);
          fileSize = new File(filePath).length();
          numChunks = calculateNumChunks();
+         chunkNames = new String[numChunks];
     }
 
     public void setPorts(int[] ports){
         this.ports = ports;
     }
+
+    public void setUploader(Uploader uploader) {
+        this.uploader = uploader;
+    }
+
 
     private int calculateNumChunks() {
         int count;
@@ -55,6 +63,7 @@ public class FileDecomposer implements Runnable{
 
             while ((bytesRead = fis.read(buffer)) != -1) {
                 chunkFileName = file.getName() + chunkNumber + ".dat";
+                chunkNames[chunkNumber - 1] = chunkFileName;
                 try (FileOutputStream fos = new FileOutputStream(chunkFileName)) {
                     fos.write(buffer, 0, bytesRead);
                 }
@@ -63,7 +72,8 @@ public class FileDecomposer implements Runnable{
                             chunkFileName,
                             ports[chunkNumber - 1] + 10000,
                             ports[chunkNumber - 1],
-                            Constants.getHostName())).start();
+                            Constants.getHostName(),
+                            uploader)).start();
                     chunkNumber++;
                 }
             }
@@ -71,14 +81,18 @@ public class FileDecomposer implements Runnable{
                     chunkFileName,
                     ports[chunkNumber - 1] + 10000,
                     ports[chunkNumber - 1],
-                    Constants.getHostName()
-            )).start();
+                    Constants.getHostName(),
+                    uploader)).start();
         } catch (
                 IOException e) {
             e.printStackTrace();
         }
 
 
+    }
+
+    public String[] getChunkNames() {
+        return chunkNames;
     }
 
 
