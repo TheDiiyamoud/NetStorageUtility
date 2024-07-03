@@ -5,16 +5,15 @@ import backend.file.FileDecomposer;
 import backend.file.Uploader;
 import requests.FileUploadRequest;
 import requests.LoginRequest;
+import requests.ShowUserFilesRequest;
 import requests.SignUpRequest;
-import responses.FileUploadAcceptedResponse;
-import responses.ServerErrorDisplay;
-import responses.ServerResponse;
-import responses.SuccessfulLoginResponse;
+import responses.*;
 import view.MainPanel;
 import view.registration.LoginPanel;
 import view.registration.RegistryPanel;
 import view.registration.SignUpPanel;
 import view.userpanel.HomePanel;
+import view.userpanel.UserFilesPanel;
 
 import java.io.File;
 import java.io.IOException;
@@ -89,6 +88,19 @@ public class RequestFlowController {
             if (r instanceof FileUploadAcceptedResponse) {
                 FileUploadAcceptedResponse response = (FileUploadAcceptedResponse) r;
                 new Uploader(response, decomposer);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showUserFilesRequest() {
+        try {
+            ServerResponse r = TCPClient.getInstance().sendRequest(new ShowUserFilesRequest(TCPClient.getInstance().getCurrentUsername()));
+            if (r instanceof ShowFilesAcceptedResponse) {
+                ShowFilesAcceptedResponse response = (ShowFilesAcceptedResponse) r;
+                UserFilesPanel.getInstance().setFileNames(response.getFileNames());
+                MainPanel.getInstance().addComponent(UserFilesPanel.getInstance());
             }
         } catch (IOException e) {
             e.printStackTrace();

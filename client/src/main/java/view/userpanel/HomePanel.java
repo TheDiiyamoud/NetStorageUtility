@@ -78,7 +78,7 @@ public class HomePanel extends JPanel {
 
     private void buttonActionListener() {
         showFilesOnServerButton.addActionListener((ActionEvent e) -> {
-            // TODO: Do what you gotta do
+            RequestFlowController.getInstance().showUserFilesRequest();
         });
         uploadFileButton.addActionListener((ActionEvent e) -> {
             JFileChooser fileChooser = new JFileChooser();
