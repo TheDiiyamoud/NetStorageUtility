@@ -1,8 +1,9 @@
 package backend.controller;
 
+import backend.Constants;
 import backend.TCPClient;
-import backend.file.FileDecomposer;
-import backend.file.Uploader;
+import udp.upload.FileDecomposer;
+import udp.upload.Uploader;
 import requests.FileUploadRequest;
 import requests.LoginRequest;
 import requests.ShowUserFilesRequest;
@@ -87,7 +88,7 @@ public class RequestFlowController {
                             threadCount));
             if (r instanceof FileUploadAcceptedResponse) {
                 FileUploadAcceptedResponse response = (FileUploadAcceptedResponse) r;
-                new Uploader(response, decomposer);
+                new Uploader(response, decomposer, Constants.getHostName());
             }
         } catch (IOException e) {
             e.printStackTrace();

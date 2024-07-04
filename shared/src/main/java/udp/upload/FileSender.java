@@ -1,4 +1,4 @@
-package backend.file;
+package udp.upload;
 
 import udp.UDPUtils.UDPacketCreator;
 
@@ -19,18 +19,18 @@ public class FileSender implements Runnable{
     private final FileInputStream fileInputStream;
     private final DatagramSocket datagramSocket;
     private final InetAddress ip;
-    private final int serverPort;
+    private final int destPort;
     private final Uploader uploader;
 
 
-    public FileSender(String filePathName, int clientPort, int serverPort, String hostName, Uploader uploader) throws IOException {
+    public FileSender(String filePathName, int sourcePort, int destPort, String hostName, Uploader uploader) throws IOException {
         File file = new File(filePathName);
         buffer = new byte[1024];
         packetNumberForVerification = new byte[1024];
         fileName = null;
         fileInputStream = new FileInputStream(file);
-        datagramSocket = new DatagramSocket(clientPort);
-        this.serverPort = serverPort;
+        datagramSocket = new DatagramSocket(sourcePort);
+        this.destPort = destPort;
         ip = InetAddress.getByName(hostName);
         fileName = file.getName().getBytes();
         this.uploader = uploader;
@@ -41,7 +41,7 @@ public class FileSender implements Runnable{
         int sequenceNumber = 0;
         try {
 
-            datagramSocket.send(new DatagramPacket(fileName, fileName.length, ip, serverPort));
+            datagramSocket.send(new DatagramPacket(fileName, fileName.length, ip, destPort));
             while (true) {
                 // verify the sequence of packets
                 DatagramPacket receivedPacket = new DatagramPacket(packetNumberForVerification, packetNumberForVerification.length);
@@ -59,13 +59,13 @@ public class FileSender implements Runnable{
 
 
 
-                DatagramPacket datagramPacket = UDPacketCreator.getInstance().getSequencedPacket(bufferToBeSent, sequenceNumber,ip, serverPort);
+                DatagramPacket datagramPacket = UDPacketCreator.getInstance().getSequencedPacket(bufferToBeSent, sequenceNumber,ip, destPort);
                 datagramSocket.send(datagramPacket);
                 sequenceNumber++;
             }
             String eof = "END_OF_FILE";
 
-            datagramSocket.send(new DatagramPacket(eof.getBytes(), eof.length(), ip, serverPort));
+            datagramSocket.send(new DatagramPacket(eof.getBytes(), eof.length(), ip, destPort));
             datagramSocket.close();
             fileInputStream.close();
             uploader.threadFinished();

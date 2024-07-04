@@ -1,13 +1,11 @@
-package backend.file;
+package udp.upload;
 
-import backend.Constants;
-import backend.TCPClient;
+
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class FileDecomposer implements Runnable{
     private final String filePath;
@@ -72,7 +70,7 @@ public class FileDecomposer implements Runnable{
                             chunkFileName,
                             ports[chunkNumber - 1] + 10000,
                             ports[chunkNumber - 1],
-                            Constants.getHostName(),
+                            uploader.getHostName(),
                             uploader)).start();
                     chunkNumber++;
                 }
@@ -81,7 +79,7 @@ public class FileDecomposer implements Runnable{
                     chunkFileName,
                     ports[chunkNumber - 1] + 10000,
                     ports[chunkNumber - 1],
-                    Constants.getHostName(),
+                    uploader.getHostName(),
                     uploader)).start();
         } catch (
                 IOException e) {

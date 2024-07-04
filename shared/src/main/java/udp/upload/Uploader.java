@@ -1,4 +1,4 @@
-package backend.file;
+package udp.upload;
 
 import responses.FileUploadAcceptedResponse;
 
@@ -8,12 +8,18 @@ public class Uploader {
     private final FileDecomposer fileDecomposer;
     private int finishedThreads;
     private final int numThreads;
-    public Uploader(FileUploadAcceptedResponse fileUploadAcceptedResponse, FileDecomposer fileDecomposer) {
+    private final String hostName;
+    public Uploader(FileUploadAcceptedResponse fileUploadAcceptedResponse, FileDecomposer fileDecomposer, String hostName) {
         this.fileUploadAcceptedResponse = fileUploadAcceptedResponse;
         this.fileDecomposer = fileDecomposer;
         finishedThreads = 0;
         numThreads = fileDecomposer.getNumChunks();
+        this.hostName = hostName;
         beginDecomposition();
+    }
+
+    public String getHostName() {
+        return hostName;
     }
 
     private void beginDecomposition() {
