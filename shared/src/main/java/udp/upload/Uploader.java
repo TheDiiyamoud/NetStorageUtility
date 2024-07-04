@@ -4,17 +4,19 @@ import responses.FileUploadAcceptedResponse;
 
 public class Uploader {
 
-    private final FileUploadAcceptedResponse fileUploadAcceptedResponse;
+
     private final FileDecomposer fileDecomposer;
     private int finishedThreads;
     private final int numThreads;
     private final String hostName;
-    public Uploader(FileUploadAcceptedResponse fileUploadAcceptedResponse, FileDecomposer fileDecomposer, String hostName) {
-        this.fileUploadAcceptedResponse = fileUploadAcceptedResponse;
+    private final int[] portsNumbers;
+    public Uploader(FileDecomposer fileDecomposer, String hostName, int[] downloaderPorts) {
+
         this.fileDecomposer = fileDecomposer;
         finishedThreads = 0;
         numThreads = fileDecomposer.getNumChunks();
         this.hostName = hostName;
+        portsNumbers = downloaderPorts;
         beginDecomposition();
     }
 
@@ -23,7 +25,6 @@ public class Uploader {
     }
 
     private void beginDecomposition() {
-        int[] portsNumbers = fileUploadAcceptedResponse.getPorts();
         fileDecomposer.setPorts(portsNumbers);
         fileDecomposer.setUploader(this);
         new Thread(fileDecomposer).start();
