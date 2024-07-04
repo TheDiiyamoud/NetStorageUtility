@@ -1,4 +1,4 @@
-package download;
+package udp.download;
 
 import java.io.File;
 import java.io.FileInputStream;

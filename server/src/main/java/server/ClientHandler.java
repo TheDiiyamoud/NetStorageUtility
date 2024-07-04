@@ -1,8 +1,7 @@
 package server;
 
-import download.Downloader;
-import download.FileReceiver;
 import model.Constants;
+import udp.download.Downloader;
 import model.UnusedUDPPortGenerator;
 import model.User;
 import requests.FileUploadRequest;
@@ -26,6 +25,7 @@ public class ClientHandler implements Runnable {
     private ObjectInputStream inputStream;
     private ObjectOutputStream outputStream;
     private String username;
+
     public ClientHandler(Socket socket) {
         this.socket = socket;
         this.username = "";
@@ -42,10 +42,7 @@ public class ClientHandler implements Runnable {
                     if (inputObject instanceof PingRequest) {
                         outputStream.writeObject(new PingResponse("Ping"));
                         outputStream.flush();
-                    }
-
-
-                    else if (inputObject instanceof SignUpRequest) {
+                    } else if (inputObject instanceof SignUpRequest) {
                         SignUpRequest req = (SignUpRequest) inputObject;
                         if (UserAuthentication.getInstance().usernameExists(req.getUsername())) {
                             outputStream.writeObject(new ServerErrorDisplay("Username Exists"));
@@ -74,11 +71,20 @@ public class ClientHandler implements Runnable {
                         }
 
 
-
                     } else if (inputObject instanceof FileUploadRequest) {
                         FileUploadRequest req = (FileUploadRequest) inputObject;
                         int[] ports = UnusedUDPPortGenerator.getPorts(req.getThreadCount());
-                        new Downloader(req, ports);
+
+
+                        new Downloader(
+                                req.getFileName(),
+                                ports,
+                                Constants.getFileDirectory(req.getUsername(),
+                                        req.getFileName()),
+                                Constants.getHostName(),
+                                req.getThreadCount());
+
+
                         outputStream.writeObject(new FileUploadAcceptedResponse("Suc", ports));
                         outputStream.flush();
                     } else {

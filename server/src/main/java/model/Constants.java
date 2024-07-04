@@ -29,4 +29,8 @@ public class Constants {
         }
         return path;
     }
+
+    public static String getHostName() {
+        return "localhost";
+    }
 }

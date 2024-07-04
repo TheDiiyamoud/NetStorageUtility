@@ -1,4 +1,4 @@
-package download;
+package udp.download;
 
 import udp.UDPUtils.ByteChecksum;
 
@@ -19,8 +19,8 @@ public class FileReceiver implements Runnable{
     private final int serverPort;
     private final int clientPort;
     private InetAddress ip;
-    private String fileDirectory;
-    private Downloader downloader;
+    private final String fileDirectory;
+    private final Downloader downloader;
 
     public FileReceiver(Downloader downloader,String fileDirectory, String clientAddress,  int clientPort, int serverPort) {
         this.downloader = downloader;
