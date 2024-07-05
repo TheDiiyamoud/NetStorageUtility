@@ -1,6 +1,7 @@
 package udp.upload;
 
 import responses.FileUploadAcceptedResponse;
+import udp.UDPUtils.ProgressBar;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +26,7 @@ public class Uploader {
         numThreads = fileDecomposer.getNumChunks();
         this.hostName = hostName;
         portsNumbers = downloaderPorts;
-        progressBar = new ProgressBar();
+        progressBar = new ProgressBar(fileDecomposer.getFileName());
     }
 
     public String getHostName() {
@@ -59,31 +60,6 @@ public class Uploader {
         }
     }
 
-    private class ProgressBar extends JFrame {
-        private final JProgressBar progressBar;
-
-        ProgressBar() {
-            this.setTitle("Progress on " + fileDecomposer.getFileName());
-            this.setSize(400, 100);
-            JPanel panel = new JPanel();
-            panel.setLayout(new BorderLayout());
-            progressBar = new JProgressBar(0, 100);
-            progressBar.setValue(0);
-            progressBar.setStringPainted(true);
-            panel.add(progressBar, BorderLayout.CENTER);
-            this.add(panel);
-
-
-        }
-
-        public void setValue(int val) {
-            progressBar.setValue(val);
-        }
-        public void finished() {
-            setVisible(false);
-            dispose();
-        }
-    }
 }
 
 
