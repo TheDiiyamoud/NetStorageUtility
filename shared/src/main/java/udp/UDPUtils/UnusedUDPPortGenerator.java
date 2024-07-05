@@ -1,4 +1,4 @@
-package model;
+package udp.UDPUtils;
 
 import java.net.DatagramSocket;
 import java.net.SocketException;

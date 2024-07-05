@@ -1,23 +1,17 @@
 package server;
 
 import model.Constants;
+import requests.*;
+import responses.*;
 import udp.download.Downloader;
-import model.UnusedUDPPortGenerator;
+import udp.UDPUtils.UnusedUDPPortGenerator;
 import model.User;
-import requests.FileUploadRequest;
-import requests.LoginRequest;
-import requests.PingRequest;
-import responses.FileUploadAcceptedResponse;
-import responses.PingResponse;
-import responses.ServerErrorDisplay;
-import requests.SignUpRequest;
-import responses.SuccessfulLoginResponse;
+import udp.upload.FileDecomposer;
+import udp.upload.Uploader;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class ClientHandler implements Runnable {
 
@@ -52,6 +46,7 @@ public class ClientHandler implements Runnable {
                             UserHandler.getInstance().createNewUser(user);
                             outputStream.writeObject(new SuccessfulLoginResponse("Signed up successfully"));
                             outputStream.flush();
+                            username = user.getUsername();
                         }
 
 
@@ -61,6 +56,7 @@ public class ClientHandler implements Runnable {
                             if (UserAuthentication.getInstance().verifyLogin(req)) {
                                 outputStream.writeObject(new SuccessfulLoginResponse("Logged in successfully"));
                                 outputStream.flush();
+                                username = req.getUsername();
                             } else {
                                 outputStream.writeObject(new ServerErrorDisplay("Wrong password"));
                                 outputStream.flush();
@@ -87,8 +83,42 @@ public class ClientHandler implements Runnable {
 
                         outputStream.writeObject(new FileUploadAcceptedResponse("Suc", ports));
                         outputStream.flush();
-                    } else {
 
+                    } else if (inputObject instanceof ShowUserFilesRequest) {
+                        ShowUserFilesRequest req = (ShowUserFilesRequest) inputObject;
+                        ArrayList<String> fileNames = Constants.getUserFiles(username);
+                        if (fileNames != null) {
+                            outputStream.writeObject(new ShowFilesAcceptedResponse("Suc", fileNames));
+                        } else {
+                            outputStream.writeObject(new ServerErrorDisplay("No Files"));
+                        }
+                        outputStream.flush();
+                    } else if (inputObject instanceof FileRemovingRequest){
+                        FileRemovingRequest frr = (FileRemovingRequest) inputObject;
+                        File fileToDeletePath = new File(Constants.getFileDirectory(username, frr.getFileName()));
+                        File fileToDelete = new File( fileToDeletePath.getAbsolutePath() + File.separator + frr.getFileName());
+                        if (fileToDelete.exists()) {
+                            if (fileToDelete.delete() && fileToDeletePath.delete()) {
+                                outputStream.writeObject(new FileRemovedResponse("Suc"));
+                            }
+                        } else {
+                            outputStream.writeObject(new ServerErrorDisplay("Failed"));
+                        }
+                        outputStream.flush();
+
+                    } else if (inputObject instanceof GetFileInfoRequest) {
+                        GetFileInfoRequest req = (GetFileInfoRequest) inputObject;
+                        File fileToDownload = new File(Constants.getFileDirectory(username, req.getFileName()) + File.separator + req.getFileName());
+                        int threadCount = FileDecomposer.getNumChunks(fileToDownload);
+                        outputStream.writeObject(new FileInfoResponse("Suc", threadCount));
+                        outputStream.flush();
+
+
+                    } else if (inputObject instanceof FileDownloadRequest) {
+                        FileDownloadRequest r = (FileDownloadRequest) inputObject;
+                        File file = new File(Constants.getFileDirectory(username, r.getFileName()) + File.separator + r.getFileName());
+                        FileDecomposer decomposer = new FileDecomposer(file.getAbsolutePath());
+                        new Uploader(decomposer, Constants.getHostName(), r.getPorts());
                     }
 
                 } else {

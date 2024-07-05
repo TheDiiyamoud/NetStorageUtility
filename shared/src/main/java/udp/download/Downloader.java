@@ -1,6 +1,8 @@
 package udp.download;
 
 
+import java.io.File;
+import java.nio.file.Paths;
 
 public class Downloader {
     private final int threadCount;
@@ -14,6 +16,16 @@ public class Downloader {
         this.finishedThreads = 0;
         this.ports = ports;
         this.fileDirectory = fileDirectory;
+        this.hostName = hostName;
+        this.fileName = fileName;
+        startDownloadThreads();
+    }
+
+    public Downloader(String fileName, int[] ports, String hostName, int threadCount) {
+        this.threadCount = threadCount;
+        this.finishedThreads = 0;
+        this.ports = ports;
+        this.fileDirectory = System.getProperty("user.home") + File.separator + "Downloads";
         this.hostName = hostName;
         this.fileName = fileName;
         startDownloadThreads();

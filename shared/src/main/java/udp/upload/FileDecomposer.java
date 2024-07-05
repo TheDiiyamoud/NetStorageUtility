@@ -45,6 +45,23 @@ public class FileDecomposer implements Runnable{
 
     }
 
+    private static int calculateNumChunks(File file) {
+        long size = file.length();
+        int count;
+        if (size <= 100 * 1024 * 1024) {
+            count = 5; // Divide into 5 parts for files <= 100 MB
+        } else if (size <= 2L * 1024 * 1024 * 1024) {
+            count = 10; // Divide into 10 parts for files <= 2 GB
+        } else {
+            count = 20; // Divide into 20 parts for larger files
+        }
+        return count;
+    }
+
+    public static int getNumChunks(File file) {
+        return calculateNumChunks(file);
+    }
+
     public int getNumChunks() {
         return numChunks;
     }

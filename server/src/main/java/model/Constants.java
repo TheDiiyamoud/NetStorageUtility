@@ -1,6 +1,7 @@
 package model;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class Constants {
 
@@ -32,5 +33,20 @@ public class Constants {
 
     public static String getHostName() {
         return "localhost";
+    }
+
+    public static ArrayList<String> getUserFiles(String username) {
+        File filesDirectory = new File(getUserPath(username));
+        if (filesDirectory.exists() && filesDirectory.isDirectory()) {
+            File[] userFiles = filesDirectory.listFiles();
+            if (userFiles != null) {
+                ArrayList<String> fileNames = new ArrayList<>();
+                for (File userFile: userFiles) {
+                    fileNames.add(userFile.getName());
+                }
+                return fileNames;
+            }
+        }
+        return null;
     }
 }

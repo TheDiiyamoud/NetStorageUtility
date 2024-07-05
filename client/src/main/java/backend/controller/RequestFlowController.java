@@ -2,12 +2,11 @@ package backend.controller;
 
 import backend.Constants;
 import backend.TCPClient;
+import requests.*;
+import udp.UDPUtils.UnusedUDPPortGenerator;
+import udp.download.Downloader;
 import udp.upload.FileDecomposer;
 import udp.upload.Uploader;
-import requests.FileUploadRequest;
-import requests.LoginRequest;
-import requests.ShowUserFilesRequest;
-import requests.SignUpRequest;
 import responses.*;
 import view.MainPanel;
 import view.registration.LoginPanel;
@@ -100,11 +99,45 @@ public class RequestFlowController {
             ServerResponse r = TCPClient.getInstance().sendRequest(new ShowUserFilesRequest(TCPClient.getInstance().getCurrentUsername()));
             if (r instanceof ShowFilesAcceptedResponse) {
                 ShowFilesAcceptedResponse response = (ShowFilesAcceptedResponse) r;
-                UserFilesPanel.getInstance().setFileNames(response.getFileNames());
+                UserFilesPanel.getInstance().addFiles(response.getFileNames());
                 MainPanel.getInstance().addComponent(UserFilesPanel.getInstance());
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void sendDeleteFileRequest(String fileName) {
+        try {
+            ServerResponse r= TCPClient.getInstance().sendRequest(new FileRemovingRequest(fileName));
+            if (r instanceof FileRemovedResponse) {
+                showUserFilesRequest();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public void sendDownloadFileRequest(String fileName) {
+        try {
+            FileInfoResponse response = sendGetFileInfoRequest(fileName);
+            assert response != null;
+            int[] ports = UnusedUDPPortGenerator.getPorts(response.getThreadCount());
+            new Downloader(fileName, ports, Constants.getHostName(), response.getThreadCount());
+            TCPClient.getInstance().sendRequest(new FileDownloadRequest(fileName, ports));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private FileInfoResponse sendGetFileInfoRequest(String fileName) throws IOException {
+        ServerResponse r = TCPClient.getInstance().sendRequest(new GetFileInfoRequest(fileName));
+        if (r instanceof FileInfoResponse) {
+            return (FileInfoResponse) r;
+        }
+        return null;
     }
 }
