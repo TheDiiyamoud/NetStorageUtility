@@ -25,7 +25,7 @@ public class Downloader {
         this.threadCount = threadCount;
         this.finishedThreads = 0;
         this.ports = ports;
-        this.fileDirectory = System.getProperty("user.home") + File.separator + "Downloads";
+        this.fileDirectory = System.getProperty("user.home");
         this.hostName = hostName;
         this.fileName = fileName;
         startDownloadThreads();
