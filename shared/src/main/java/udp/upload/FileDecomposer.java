@@ -111,5 +111,12 @@ public class FileDecomposer implements Runnable{
     }
 
 
+    public String getFileName() {
+        return file.getName();
+    }
+
+    public long getFileSize() {
+        return fileSize;
+    }
 
 }

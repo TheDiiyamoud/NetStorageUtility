@@ -39,6 +39,8 @@ public class FileSender implements Runnable{
     @Override
     public void run() {
         int sequenceNumber = 0;
+        long previousBytesRead = 0;
+        long currentBytesRead = previousBytesRead;
         try {
 
             datagramSocket.send(new DatagramPacket(fileName, fileName.length, ip, destPort));
@@ -61,6 +63,12 @@ public class FileSender implements Runnable{
 
                 DatagramPacket datagramPacket = UDPacketCreator.getInstance().getSequencedPacket(bufferToBeSent, sequenceNumber,ip, destPort);
                 datagramSocket.send(datagramPacket);
+                if (sequenceNumber % 10 == 0) {
+                    currentBytesRead = fileInputStream.getChannel().position();
+                    currentBytesRead -= previousBytesRead;
+                    uploader.update(currentBytesRead);
+                    previousBytesRead = fileInputStream.getChannel().position();
+                }
                 sequenceNumber++;
             }
             String eof = "END_OF_FILE";
