@@ -87,7 +87,9 @@ public class RequestFlowController {
                             threadCount));
             if (r instanceof FileUploadAcceptedResponse) {
                 FileUploadAcceptedResponse response = (FileUploadAcceptedResponse) r;
-                new Uploader(decomposer, Constants.getHostName(), response.getPorts());
+                Uploader uploader = new Uploader(decomposer, Constants.getHostName(), response.getPorts());
+                uploader.setProgressBar();
+                uploader.beginDecomposition();
             }
         } catch (IOException e) {
             e.printStackTrace();

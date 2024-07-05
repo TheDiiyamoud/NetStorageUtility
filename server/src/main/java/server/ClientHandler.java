@@ -118,7 +118,8 @@ public class ClientHandler implements Runnable {
                         FileDownloadRequest r = (FileDownloadRequest) inputObject;
                         File file = new File(Constants.getFileDirectory(username, r.getFileName()) + File.separator + r.getFileName());
                         FileDecomposer decomposer = new FileDecomposer(file.getAbsolutePath());
-                        new Uploader(decomposer, Constants.getHostName(), r.getPorts());
+                        Uploader uploader = new Uploader(decomposer, Constants.getHostName(), r.getPorts());
+                        uploader.beginDecomposition();
                     }
 
                 } else {

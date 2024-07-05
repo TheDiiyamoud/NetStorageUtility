@@ -26,17 +26,19 @@ public class Uploader {
         this.hostName = hostName;
         portsNumbers = downloaderPorts;
         progressBar = new ProgressBar();
-        beginDecomposition();
     }
 
     public String getHostName() {
         return hostName;
     }
 
-    private void beginDecomposition() {
+    public void beginDecomposition() {
         fileDecomposer.setPorts(portsNumbers);
         fileDecomposer.setUploader(this);
         new Thread(fileDecomposer).start();
+    }
+
+    public void setProgressBar() {
         progressBar.setVisible(true);
     }
 
@@ -49,10 +51,12 @@ public class Uploader {
     }
 
     public synchronized void update(long increment) {
-        progress += increment;
-        double percentage = ((double)progress / fileSize) * 100;
-        long roundedPercentage = Math.round(percentage);
-        progressBar.setValue((int) roundedPercentage);
+        if (progressBar.isVisible()) {
+            progress += increment;
+            double percentage = ((double) progress / fileSize) * 100;
+            long roundedPercentage = Math.round(percentage);
+            progressBar.setValue((int) roundedPercentage);
+        }
     }
 
     private class ProgressBar extends JFrame {
