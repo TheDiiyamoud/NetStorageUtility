@@ -72,14 +72,14 @@ public class ClientHandler implements Runnable {
                         int[] ports = UnusedUDPPortGenerator.getPorts(req.getThreadCount());
 
 
-                        new Downloader(
+                        Downloader d = new Downloader(
                                 req.getFileName(),
                                 ports,
                                 Constants.getFileDirectory(req.getUsername(),
                                         req.getFileName()),
                                 Constants.getHostName(),
                                 req.getThreadCount());
-
+                        d.startDownloadThreads();
 
                         outputStream.writeObject(new FileUploadAcceptedResponse("Suc", ports));
                         outputStream.flush();
@@ -110,7 +110,7 @@ public class ClientHandler implements Runnable {
                         GetFileInfoRequest req = (GetFileInfoRequest) inputObject;
                         File fileToDownload = new File(Constants.getFileDirectory(username, req.getFileName()) + File.separator + req.getFileName());
                         int threadCount = FileDecomposer.getNumChunks(fileToDownload);
-                        outputStream.writeObject(new FileInfoResponse("Suc", threadCount));
+                        outputStream.writeObject(new FileInfoResponse("Suc", threadCount, fileToDownload.length()));
                         outputStream.flush();
 
 

@@ -127,7 +127,9 @@ public class RequestFlowController {
             FileInfoResponse response = sendGetFileInfoRequest(fileName);
             assert response != null;
             int[] ports = UnusedUDPPortGenerator.getPorts(response.getThreadCount());
-            new Downloader(fileName, ports, Constants.getHostName(), response.getThreadCount());
+            Downloader d = new Downloader(fileName, ports, Constants.getHostName(), response.getThreadCount(), response.getFileSize());
+            d.setProgressBar();
+            d.startDownloadThreads();
             TCPClient.getInstance().sendRequest(new FileDownloadRequest(fileName, ports));
 
         } catch (IOException e) {

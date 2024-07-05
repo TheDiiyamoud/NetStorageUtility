@@ -36,6 +36,8 @@ public class FileReceiver implements Runnable{
 
     @Override
     public void run() {
+        long currentBytesRead = 0;
+        long previousBytesRead = 0;
         try {
             datagramSocket = new DatagramSocket(serverPort);
             byte[] buffer = new byte[1044];
@@ -63,6 +65,12 @@ public class FileReceiver implements Runnable{
                     continue;
                 }
 
+                if (sequence % 10 == 0) {
+                    currentBytesRead = fileOutputStream.getChannel().position();
+                    currentBytesRead -= previousBytesRead;
+                    downloader.update(currentBytesRead);
+                    previousBytesRead = fileOutputStream.getChannel().position();
+                }
                 sequence++;
             }
             downloader.threadFinished();

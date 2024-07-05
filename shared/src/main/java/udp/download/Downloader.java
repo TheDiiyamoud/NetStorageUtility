@@ -1,6 +1,8 @@
 package udp.download;
 
 
+import udp.UDPUtils.ProgressBar;
+
 import java.io.File;
 import java.nio.file.Paths;
 
@@ -10,6 +12,9 @@ public class Downloader {
     private final String fileDirectory;
     private final String hostName;
     private final String fileName;
+    private long fileSize;
+    private long progress;
+    private ProgressBar progressBar;
     int[] ports;
     public Downloader(String fileName, int[] ports, String fileDirectory, String hostName, int threadCount) {
         this.threadCount = threadCount;
@@ -18,20 +23,21 @@ public class Downloader {
         this.fileDirectory = fileDirectory;
         this.hostName = hostName;
         this.fileName = fileName;
-        startDownloadThreads();
+        progressBar = new ProgressBar(fileName);
     }
 
-    public Downloader(String fileName, int[] ports, String hostName, int threadCount) {
+    public Downloader(String fileName, int[] ports, String hostName, int threadCount, long fileSize) {
         this.threadCount = threadCount;
         this.finishedThreads = 0;
         this.ports = ports;
         this.fileDirectory = System.getProperty("user.home");
         this.hostName = hostName;
         this.fileName = fileName;
-        startDownloadThreads();
+        this.fileSize = fileSize;
+        progressBar = new ProgressBar(fileName);
     }
 
-    private void startDownloadThreads() {
+    public void startDownloadThreads() {
         for (int i = 0; i < threadCount; i++) {
             new Thread(new FileReceiver(
                     this,
@@ -49,6 +55,20 @@ public class Downloader {
                     threadCount,
                     fileDirectory,
                     fileName)).start();
+            progressBar.finished();
+        }
+    }
+
+    public void setProgressBar() {
+        progressBar.setVisible(true);
+    }
+
+    public void update(long increment) {
+        if (progressBar.isVisible()) {
+            progress += increment;
+            double percentage = ((double) progress / fileSize) * 100;
+            long roundedPercentage = Math.round(percentage);
+            progressBar.setValue((int) roundedPercentage);
         }
     }
 
