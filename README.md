@@ -23,8 +23,6 @@ A multi-threaded client/server file transferring/hosting utility over UDP.
 2. Navigate to the project directory and build the project
     ```bash
    cd NetStorageUtility && mvn clean install
-
-
 ### Usage
 1. To run the `Server`, navigate to the `server/target` directory, and run:
      ```bash
