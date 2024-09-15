@@ -18,16 +18,20 @@ A multi-threaded client/server file transferring/hosting utility over UDP.
 ### Installation
 
 1. Clone the repository:
+   
    ```bash
    git clone https://github.com/TheDiiyamoud/NetStorageUtility.git
-2. Navigate to the project directory and build the project
+3. Navigate to the project directory and build the project
+   
     ```bash
    cd NetStorageUtility && mvn clean install
 ### Usage
 1. To run the `Server`, navigate to the `server/target` directory, and run:
+   
      ```bash
      java -jar server-{VERSION}-SNAPSHOT.jar
-2. Similarly, to run the `Client`, navigate to the `client/target` directory, and run:
+3. Similarly, to run the `Client`, navigate to the `client/target` directory, and run:
+   
      ```bash
      java -jar client-{VERSION}-SNAPSHOT.jar
 Note that currently, the server needs to be running before a client is launched.
