@@ -1,8 +1,10 @@
-package server;
+package server.clienthandler;
 
 import model.Constants;
 import requests.*;
 import responses.*;
+import server.UserAuthentication;
+import server.UserHandler;
 import udp.download.Downloader;
 import udp.UDPUtils.UnusedUDPPortGenerator;
 import model.User;
